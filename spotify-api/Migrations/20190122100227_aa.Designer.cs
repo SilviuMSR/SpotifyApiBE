@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpotifyApi.Domain.Services;
 
 namespace SpotifyApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190122100227_aa")]
+    partial class aa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,65 +89,6 @@ namespace SpotifyApi.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.PlaylistAlbum", b =>
-                {
-                    b.Property<int>("PlaylistAlbumId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ImgUri");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Type");
-
-                    b.HasKey("PlaylistAlbumId");
-
-                    b.ToTable("PlaylistAlbums");
-                });
-
-            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.PlaylistArtist", b =>
-                {
-                    b.Property<int>("PlaylistArtistId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ImgUri");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Uri");
-
-                    b.HasKey("PlaylistArtistId");
-
-                    b.ToTable("PlaylistArtists");
-                });
-
-            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.PlaylistTrack", b =>
-                {
-                    b.Property<int>("PlaylistTrackId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Href");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int?>("PlaylistAlbumId");
-
-                    b.Property<int?>("PlaylistArtistId");
-
-                    b.Property<string>("PreviewUrl");
-
-                    b.HasKey("PlaylistTrackId");
-
-                    b.HasIndex("PlaylistAlbumId");
-
-                    b.HasIndex("PlaylistArtistId");
-
-                    b.ToTable("PlaylistTracks");
                 });
 
             modelBuilder.Entity("SpotifyApi.Domain.Models.Album", b =>
@@ -333,17 +276,6 @@ namespace SpotifyApi.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.PlaylistTrack", b =>
-                {
-                    b.HasOne("SpotifyApi.Domain.EntityModels.PlaylistAlbum")
-                        .WithMany("Tracks")
-                        .HasForeignKey("PlaylistAlbumId");
-
-                    b.HasOne("SpotifyApi.Domain.EntityModels.PlaylistArtist")
-                        .WithMany("Tracks")
-                        .HasForeignKey("PlaylistArtistId");
                 });
 
             modelBuilder.Entity("SpotifyApi.Domain.Models.Artist", b =>

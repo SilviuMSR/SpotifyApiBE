@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
+using Microsoft.AspNetCore.Cors;
 
 namespace SpotifyApi.Controllers
 {

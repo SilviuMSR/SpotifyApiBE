@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SpotifyApi.Domain.Models
+namespace SpotifyApi.Domain.EntityModels
 {
-    public class Track
+    public class PlaylistTrack
     {
-        public int TrackId { get; set; }
+        public int PlaylistTrackId { get; set; }
 
         public string Name { get; set; }
 
@@ -16,6 +15,5 @@ namespace SpotifyApi.Domain.Models
 
         public string PreviewUrl { get; set; }
 
-        public ICollection<Artist> Artists { get; set; }
     }
 }

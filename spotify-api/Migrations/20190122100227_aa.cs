@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SpotifyApi.Migrations
 {
-    public partial class sad : Migration
+    public partial class aa : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -75,7 +75,7 @@ namespace SpotifyApi.Migrations
                     Name = table.Column<string>(nullable: true),
                     Href = table.Column<string>(nullable: true),
                     PreviewUrl = table.Column<string>(nullable: true),
-                    AlbumId = table.Column<int>(nullable: false)
+                    AlbumId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,7 +85,7 @@ namespace SpotifyApi.Migrations
                         column: x => x.AlbumId,
                         principalTable: "Albums",
                         principalColumn: "AlbumId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(

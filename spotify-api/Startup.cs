@@ -33,6 +33,9 @@ namespace SpotifyApi
             services.AddScoped<IAlbmRepo,AlbumRepo>();
             services.AddScoped<IArtistRepo, ArtistRepo>();
             services.AddScoped<ITrackRepo, TrackRepo>();
+            services.AddScoped<IPlaylistAlbum, PlaylistAlbumRepo>();
+            services.AddScoped<IPlaylistArtist, PlaylistArtistRepo>();
+            services.AddScoped<IPlaylistTrack, PlaylistTrackRepo>();
 
 
             services.AddCors();

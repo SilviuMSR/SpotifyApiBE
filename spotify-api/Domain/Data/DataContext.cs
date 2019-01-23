@@ -6,6 +6,7 @@ using System.Linq;
 
 using SpotifyApi.Domain.Models;
 using SpotifyApi.Domain.Models.Roles;
+using SpotifyApi.Domain.EntityModels;
 
 namespace SpotifyApi.Domain.Services
 {
@@ -22,6 +23,9 @@ namespace SpotifyApi.Domain.Services
         public DbSet<Track> Tracks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Album> Albums { get; set; }
+        public DbSet<PlaylistAlbum> PlaylistAlbums { get; set; }
+        public DbSet<PlaylistArtist> PlaylistArtists { get; set; }
+        public DbSet<PlaylistTrack> PlaylistTracks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -48,9 +52,6 @@ namespace SpotifyApi.Domain.Services
                 .WithMany(a => a.Artists);
 
 
-            builder.Entity<Track>()
-                .HasOne(a => a.Album)
-                .WithMany(t => t.Tracks);
         }
     }
 }
