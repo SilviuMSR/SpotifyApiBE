@@ -62,7 +62,7 @@ namespace SpotifyApi.Controllers
 
             var mappedTrack = _mapper.Map<Track>(track);
 
-            return Created($"http://localhost:5000/api/track/{track.TrackId}", mappedTrack);
+            return StatusCode(201);
         }
 
         [HttpPut("{id}")]

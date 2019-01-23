@@ -46,7 +46,7 @@ namespace SpotifyApi.Controllers
 
             var mappedArtist = _mapper.Map<ArtistDto>(artist);
 
-            return Created($"https://localhost:5001/artists/{artist.ArtistId}", mappedArtist);
+            return StatusCode(201);
         }
 
         //get an artist by id

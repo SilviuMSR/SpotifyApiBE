@@ -52,7 +52,7 @@ namespace SpotifyApi.Controllers
             return Ok(mappedAlbum);
         }
 
-        [HttpPost(Name = nameof(Post))]
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] AlbumDto albumDto)
         {
             //mapping dto to entity
@@ -61,15 +61,11 @@ namespace SpotifyApi.Controllers
             _albumRepo.Add(album);
 
             var mappedAlbum = _mapper.Map<AlbumDto>(album);
-
-            mappedAlbum.Links = new List<Link>();
-
-            mappedAlbum.Links.Add(new Link(this.Url.Link(nameof(Post), mappedAlbum.AlbumId).ToString() , "self", "POST"));
-
-            return Created($"http://localhost:5000/api/album/{album.AlbumId}", mappedAlbum);
+            
+            return StatusCode(201);
         }
 
-        [HttpDelete("{id}", Name = "Delete Album")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var album = await _albumRepo.GetByIdAsync(id);
