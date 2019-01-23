@@ -17,5 +17,7 @@ namespace SpotifyApi.Domain.Dtos
 
         public ICollection<TrackDto> Tracks { get; set; }
 
+        public List<Link> Links { get; set; }
+
     }
 }

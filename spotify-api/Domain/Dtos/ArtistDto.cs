@@ -15,8 +15,6 @@ namespace SpotifyApi.Domain.Dtos
 
         public string ImgUri { get; set; }
 
-        public int TrackId { get; set; }
-
         public List<Link> Links { get; set; }
 
     }

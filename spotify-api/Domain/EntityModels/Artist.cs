@@ -16,9 +16,5 @@ namespace SpotifyApi.Domain.Models
 
         public string ImgUri { get; set; }
 
-
-        //Navigation property to track
-        public int TrackId { get; set; }
-        public Track Track { get; set; }
     }
 }

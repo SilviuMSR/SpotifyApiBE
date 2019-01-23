@@ -38,6 +38,7 @@ namespace SpotifyApi
             services.AddScoped<IPlaylistTrack, PlaylistTrackRepo>();
 
 
+
             services.AddCors();
 
 
@@ -90,6 +91,8 @@ namespace SpotifyApi
 
             //now add the mapper as a service, unique, global per application scope
             services.AddSingleton(mapper);
+
+            
       
         }
 

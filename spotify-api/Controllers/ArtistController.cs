@@ -44,7 +44,9 @@ namespace SpotifyApi.Controllers
 
             _artistRepo.Add(artist);
 
-            return Created($"https://localhost:5001/artists/{artist.ArtistId}", artistDto);
+            var mappedArtist = _mapper.Map<ArtistDto>(artist);
+
+            return StatusCode(201);
         }
 
         //get an artist by id
@@ -90,18 +92,16 @@ namespace SpotifyApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] ArtistDto artistDto)
         {
-            var newArtist = await _artistRepo.GetByIdAsync(id);
 
-            if (newArtist == null)
-            {
-                return NotFound();
-            }
+            var mappedArtist = _mapper.Map<Artist>(artistDto);
 
-            _artistRepo.Update(id, newArtist);
+            _artistRepo.Update(id, mappedArtist);
 
-            var mappedArtist = _mapper.Map<ArtistDto>(newArtist);
+            var updatedArtist = await _artistRepo.GetByIdAsync(id);
 
-            return Ok(mappedArtist);
+            var mappedUpdatedArtist = _mapper.Map<ArtistDto>(updatedArtist);
+
+            return Ok(mappedUpdatedArtist);
         }
 
     }

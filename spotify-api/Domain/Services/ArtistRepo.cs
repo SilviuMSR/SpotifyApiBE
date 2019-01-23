@@ -31,12 +31,12 @@ namespace SpotifyApi.Domain.Services
 
         public Task<List<Artist>> GetAllAsync()
         {
-            return _context.Artists.Include(t => t.Track).ToListAsync();
+            return _context.Artists.ToListAsync();
         }
 
         public Task<Artist> GetByIdAsync(int id)
         {
-            var artist = _context.Artists.Include(t => t.Track).FirstOrDefaultAsync(a => a.ArtistId == id);
+            var artist = _context.Artists.FirstOrDefaultAsync(a => a.ArtistId == id);
 
             return artist;
         }
@@ -45,9 +45,9 @@ namespace SpotifyApi.Domain.Services
         {
             var artist = _context.Artists.FirstOrDefault(a => a.ArtistId == id);
             
-            artist.ImgUri = artist.ImgUri;
-            artist.Name = artist.Name;
-            artist.Uri = artist.Uri;
+            artist.ImgUri = newArtist.ImgUri;
+            artist.Name = newArtist.Name;
+            artist.Uri = newArtist.Uri;
 
             _context.Artists.Update(artist);
 

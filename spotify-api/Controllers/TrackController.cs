@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
-using Microsoft.AspNetCore.Cors;
 
 namespace SpotifyApi.Controllers
 {
@@ -61,25 +60,24 @@ namespace SpotifyApi.Controllers
 
             _trackRepo.Add(track);
 
-            return Created($"http://localhost:5000/api/track/{track.TrackId}", trackDto);
+            var mappedTrack = _mapper.Map<Track>(track);
+
+            return StatusCode(201);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] TrackDto trackDto)
         {
 
-            var newTrack = await _trackRepo.GetByIdAsync(id);
-
-            if(newTrack == null)
-            {
-                return NotFound();
-            }
-
             var mappedTrack = _mapper.Map<Track>(trackDto);
 
             _trackRepo.Update(id, mappedTrack);
 
-            return Ok(mappedTrack);
+            var newTrack = await _trackRepo.GetByIdAsync(id);
+
+            var updatedTrack = _mapper.Map<TrackDto>(newTrack);
+
+            return Ok(updatedTrack);
         }
 
         [HttpDelete("{id}")]

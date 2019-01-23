@@ -28,7 +28,7 @@ namespace SpotifyApi.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet(Name = "Get Albums")]
         public async Task<IActionResult> Get()
         {
             var albums = await _albumRepo.GetAllAsync();
@@ -60,7 +60,9 @@ namespace SpotifyApi.Controllers
 
             _albumRepo.Add(album);
 
-            return Created($"http://localhost:5000/api/album/{album.AlbumId}",albumDto);
+            var mappedAlbum = _mapper.Map<AlbumDto>(album);
+            
+            return StatusCode(201);
         }
 
         [HttpDelete("{id}")]
@@ -81,16 +83,18 @@ namespace SpotifyApi.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "Update Album")]
         public async Task<IActionResult> Update(int id, [FromBody] AlbumDto albumDto)
         {
             var album = _mapper.Map<Album>(albumDto);
-
-            var newAlbum = await _albumRepo.GetByIdAsync(id);
-
+            
             _albumRepo.Update(id, album);
 
-            return Ok(albumDto);
+            var updatedAlbum = await _albumRepo.GetByIdAsync(id);
+
+            var mappedUpdatedAlbum = _mapper.Map<AlbumDto>(updatedAlbum);
+
+            return Ok(mappedUpdatedAlbum);
         }
 
     }

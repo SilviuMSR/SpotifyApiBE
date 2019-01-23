@@ -17,5 +17,6 @@ namespace SpotifyApi.Domain.Models
         public string PreviewUrl { get; set; }
 
         public ICollection<Artist> Artists { get; set; }
+
     }
 }

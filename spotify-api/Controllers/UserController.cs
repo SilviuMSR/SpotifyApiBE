@@ -38,7 +38,7 @@ namespace SpotifyApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDto userDto)
         {
             var user = _mapper.Map<User>(userDto);
@@ -59,24 +59,23 @@ namespace SpotifyApi.Controllers
 
                 return Ok(new
                 {
-                    token = GenerateJwtToken(usr),
-                    userDto,
+                    token = GenerateJwtToken(usr)
                 });
             }
 
             return Unauthorized();
         }
 
-        [HttpPost("register")]
+        [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
             var user = _mapper.Map<User>(userDto);
-
+            
             var result = await _userManager.CreateAsync(user, user.Password);
-
+            
             if(result.Succeeded)
             {
-                return Created("http://localhost:5000/api/user", userDto);
+                return StatusCode(201);
             }
 
             return BadRequest(result.Errors);
@@ -84,10 +83,13 @@ namespace SpotifyApi.Controllers
 
         private string GenerateJwtToken(User user)
         {
+
+            var mappedUser = _mapper.Map<UserDto>(user);
+
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.NameIdentifier, mappedUser.Id.ToString()),
+                new Claim(ClaimTypes.Name, mappedUser.UserName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
