@@ -1,0 +1,6 @@
+C:\Users\Student\Desktop\SpotifyApiBE-master\Spotify.Data\bin\Debug\netcoreapp2.1\Spotify.Data.deps.json
+C:\Users\Student\Desktop\SpotifyApiBE-master\Spotify.Data\bin\Debug\netcoreapp2.1\Spotify.Data.dll
+C:\Users\Student\Desktop\SpotifyApiBE-master\Spotify.Data\obj\Debug\netcoreapp2.1\Spotify.Data.csprojAssemblyReference.cache
+C:\Users\Student\Desktop\SpotifyApiBE-master\Spotify.Data\obj\Debug\netcoreapp2.1\Spotify.Data.csproj.CoreCompileInputs.cache
+C:\Users\Student\Desktop\SpotifyApiBE-master\Spotify.Data\obj\Debug\netcoreapp2.1\Spotify.Data.AssemblyInfoInputs.cache
+C:\Users\Student\Desktop\SpotifyApiBE-master\Spotify.Data\obj\Debug\netcoreapp2.1\Spotify.Data.AssemblyInfo.cs
