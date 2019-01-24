@@ -12,6 +12,8 @@ using SpotifyApi.Domain.Services;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SpotifyApi.Domain.Dtos;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace SpotifyApi
 {
@@ -33,7 +35,16 @@ namespace SpotifyApi
             services.AddScoped<IAlbmRepo,AlbumRepo>();
             services.AddScoped<IArtistRepo, ArtistRepo>();
             services.AddScoped<ITrackRepo, TrackRepo>();
+            //for constructing links
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper, UrlHelper>(implementationFactory =>
+            {
+                var actionContext =
+                    implementationFactory.GetService<IActionContextAccessor>().ActionContext;
 
+                return new UrlHelper(actionContext);
+            });
+       
 
             services.AddCors();
 
@@ -85,11 +96,11 @@ namespace SpotifyApi
 
             var mapper = config.CreateMapper();
 
+
             //now add the mapper as a service, unique, global per application scope
             services.AddSingleton(mapper);
 
-            
-      
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

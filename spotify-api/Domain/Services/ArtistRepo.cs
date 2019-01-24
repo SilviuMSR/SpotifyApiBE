@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SpotifyApi.Domain.Logic;
 using SpotifyApi.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,13 @@ namespace SpotifyApi.Domain.Services
         public Task<List<Artist>> GetAllAsync()
         {
             return _context.Artists.ToListAsync();
+        }
+
+        public PagedList<Artist> GetAllPaginationAsync(int pageNumber, int pageSize)
+        {
+            var collectionBeforPaging = _context.Artists;
+
+            return PagedList<Artist>.Create(collectionBeforPaging, pageNumber, pageSize);
         }
 
         public Task<Artist> GetByIdAsync(int id)

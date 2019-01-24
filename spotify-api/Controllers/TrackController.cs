@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Logic;
 
 namespace SpotifyApi.Controllers
 {
@@ -22,21 +23,29 @@ namespace SpotifyApi.Controllers
     {
         private readonly ITrackRepo _trackRepo;
         private readonly IMapper _mapper;
+        private readonly IUrlHelper _urlHelper;
 
-        public TrackController(ITrackRepo trackRepo, IMapper mapper)
+
+        public TrackController(ITrackRepo trackRepo, 
+            IMapper mapper,
+            IUrlHelper urlHelper)
         {
             _trackRepo = trackRepo;
             _mapper = mapper;
+            _urlHelper = urlHelper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet(Name = "Get Tracks")]
+        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
         {
-            var tracks = await _trackRepo.GetAllAsync();
-            var mappedTracks = _mapper.Map<IEnumerable<TrackDto>>(tracks);
+            //Also must modify paginationAsync name since it is not async
+            var tracks = _trackRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
 
-            return Ok(mappedTracks);
+            return Ok(tracks);
         }
+
+        //this part must be refactored and added to another folder
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)

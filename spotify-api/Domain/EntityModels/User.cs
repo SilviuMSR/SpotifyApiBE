@@ -15,7 +15,6 @@ namespace SpotifyApi.Domain.Models
 
         public string Href { get; set; }
 
-        //AddRoles to our User
-        public ICollection<UserRole> UserRoles { get; set; }
+
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SpotifyApi.Domain.Models;
+using SpotifyApi.Domain.Logic;
 
 namespace SpotifyApi.Domain.Services
 {
@@ -42,6 +43,15 @@ namespace SpotifyApi.Domain.Services
             return _context.Albums
                 .Include(t => t.Tracks)
                 .ToListAsync();
+        }
+
+        public PagedList<Album> GetAllPaginationAsync(int pageNumber, int pageSize)
+        {
+
+            var collectionBeforPaging = _context.Albums.Include(t => t.Tracks);
+
+            return PagedList<Album>.Create(collectionBeforPaging, pageNumber, pageSize);
+
         }
 
         public Task<Album> GetByIdAsync(int id)
