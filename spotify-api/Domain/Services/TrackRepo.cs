@@ -17,16 +17,16 @@ namespace SpotifyApi.Domain.Services
             _context = context;
         }
 
-        public void Add(Track t)
+        public async void Add(Track t)
         {
             _context.Add(t);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(Track t)
+        public async void Delete(Track t)
         {
             _context.Remove(t);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public Task<List<Track>> GetAllAsync()
@@ -50,9 +50,9 @@ namespace SpotifyApi.Domain.Services
                 .FirstOrDefaultAsync(t => t.TrackId == id);
         }
 
-        public void Update(int id, Track newTrack)
+        public async void Update(int id, Track newTrack)
         {
-            var track = _context.Tracks.FirstOrDefault(t => t.TrackId == id);
+            var track = await _context.Tracks.FirstOrDefaultAsync(t => t.TrackId == id);
 
             track.Artists = newTrack.Artists;
             track.Name = newTrack.Name;
@@ -61,7 +61,7 @@ namespace SpotifyApi.Domain.Services
 
             _context.Tracks.Update(track);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

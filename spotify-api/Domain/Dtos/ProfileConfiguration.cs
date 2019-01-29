@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using SpotifyApi.Domain.EntityModels;
 using SpotifyApi.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,17 @@ namespace SpotifyApi.Domain.Dtos
 
             CreateMap<Artist, ArtistDto>()
                .ReverseMap();
+
+            CreateMap<PlaylistAlbum, PlaylistAlbumDto>()
+                .ForMember(d => d.Tracks, o => o.MapFrom(a => a.Tracks))
+                .ReverseMap();
+
+            CreateMap<PlaylistArtist, PlaylistArtistDto>()
+               .ForMember(d => d.Tracks, o => o.MapFrom(a => a.Tracks))
+              .ReverseMap();
+
+            CreateMap<PlaylistTrack, PlaylistTrackDto>()
+              .ReverseMap();
         }
     }
 }

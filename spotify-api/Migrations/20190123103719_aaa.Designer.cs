@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpotifyApi.Domain.Services;
 
 namespace SpotifyApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190123103719_aaa")]
+    partial class aaa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,7 +177,7 @@ namespace SpotifyApi.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int?>("TrackId");
+                    b.Property<int>("TrackId");
 
                     b.Property<string>("Uri");
 
@@ -348,9 +350,10 @@ namespace SpotifyApi.Migrations
 
             modelBuilder.Entity("SpotifyApi.Domain.Models.Artist", b =>
                 {
-                    b.HasOne("SpotifyApi.Domain.Models.Track")
+                    b.HasOne("SpotifyApi.Domain.Models.Track", "Track")
                         .WithMany("Artists")
-                        .HasForeignKey("TrackId");
+                        .HasForeignKey("TrackId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("SpotifyApi.Domain.Models.Roles.UserRole", b =>
@@ -366,7 +369,7 @@ namespace SpotifyApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SpotifyApi.Domain.Models.User", "User")
-                        .WithMany()
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId1");
                 });
 
