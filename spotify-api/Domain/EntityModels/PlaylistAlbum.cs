@@ -16,5 +16,6 @@ namespace SpotifyApi.Domain.EntityModels
         public string ImgUri { get; set; }
 
         public ICollection<PlaylistTrack> Tracks { get; set; }
+
     }
 }

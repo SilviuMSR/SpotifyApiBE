@@ -12555,11 +12555,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Student\\Desktop\\SpotifyApiBE-master\\spotify-api\\SpotifyApi.csproj",
+      "projectUniqueName": "D:\\BackendSpotify\\SpotifyApiBE\\spotify-api\\SpotifyApi.csproj",
       "projectName": "SpotifyApi",
-      "projectPath": "C:\\Users\\Student\\Desktop\\SpotifyApiBE-master\\spotify-api\\SpotifyApi.csproj",
+      "projectPath": "D:\\BackendSpotify\\SpotifyApiBE\\spotify-api\\SpotifyApi.csproj",
       "packagesPath": "C:\\Users\\Student\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Student\\Desktop\\SpotifyApiBE-master\\spotify-api\\obj\\",
+      "outputPath": "D:\\BackendSpotify\\SpotifyApiBE\\spotify-api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

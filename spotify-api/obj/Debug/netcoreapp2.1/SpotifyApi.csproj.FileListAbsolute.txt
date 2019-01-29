@@ -68,3 +68,17 @@ C:\Users\Bogdan\Desktop\SpotifyApiBE-master\spotify-api\obj\Debug\netcoreapp2.1\
 C:\Users\Bogdan\Desktop\SpotifyApiBE-master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.dll
 C:\Users\Bogdan\Desktop\SpotifyApiBE-master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.pdb
 C:\Users\Student\Desktop\SpotifyApiBE-master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.csprojAssemblyReference.cache
+D:\BackendSpotify\SpotifyApiBE\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.deps.json
+D:\BackendSpotify\SpotifyApiBE\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.runtimeconfig.json
+D:\BackendSpotify\SpotifyApiBE\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.runtimeconfig.dev.json
+D:\BackendSpotify\SpotifyApiBE\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.dll
+D:\BackendSpotify\SpotifyApiBE\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.pdb
+D:\BackendSpotify\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.csprojAssemblyReference.cache
+D:\BackendSpotify\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.csproj.CoreCompileInputs.cache
+D:\BackendSpotify\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.RazorAssemblyInfo.cache
+D:\BackendSpotify\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.RazorAssemblyInfo.cs
+D:\BackendSpotify\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.AssemblyInfoInputs.cache
+D:\BackendSpotify\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.AssemblyInfo.cs
+D:\BackendSpotify\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.RazorTargetAssemblyInfo.cache
+D:\BackendSpotify\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.dll
+D:\BackendSpotify\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.pdb
