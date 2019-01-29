@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Logic.Links;
 
 namespace SpotifyApi.Controllers
 {
@@ -19,25 +20,51 @@ namespace SpotifyApi.Controllers
     {
         private readonly IArtistRepo _artistRepo;
         private readonly IMapper _mapper;
+        private readonly ILinkService<ArtistDto> _linkService;
+
  
-        public ArtistController(IArtistRepo artistRepo, IMapper mapper)
+        public ArtistController(IArtistRepo artistRepo,
+            IMapper mapper,
+            ILinkService<ArtistDto> linkService)
         {
             _artistRepo = artistRepo;
             _mapper = mapper;
+            _linkService = linkService;
         }
 
         // GET: api/Artists
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet(Name = "GetArtists")]
+        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
         {
-            var artists = await _artistRepo.GetAllAsync();
+            var artists = _artistRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
             var mappedArtists = _mapper.Map<IEnumerable<Artist>>(artists);
+
+            //constructing links to previus next page
+            var previousPage = artists.HasPrevious ?
+              _linkService.CreateResourceUri(resourceParameters, ResourceType.PreviousPage) : null;
+
+            var nextPage = artists.HasNext ?
+                _linkService.CreateResourceUri(resourceParameters, ResourceType.NextPage) : null;
+
+            var paginationMetadata = new
+            {
+                totalCount = artists.TotalCount,
+                pageSize = artists.PageSize,
+                currentPage = artists.CurrentPage,
+                totalPages = artists.TotalPages,
+                previousPageLink = previousPage,
+                nextPageLink = nextPage
+            };
+
+            Response.Headers.Add("X-Pagination",
+                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
+
 
             return Ok(mappedArtists);
         }
 
         // POST: api/Artists
-        [HttpPost]
+        [HttpPost(Name = "CreateArtists")]
         public async Task<IActionResult> Post([FromBody] ArtistDto artistDto)
         {
             var artist = _mapper.Map<Artist>(artistDto);
@@ -46,11 +73,11 @@ namespace SpotifyApi.Controllers
 
             var mappedArtist = _mapper.Map<ArtistDto>(artist);
 
-            return StatusCode(201);
+            return Ok(_linkService.CreateLinks(mappedArtist));
         }
 
         //get an artist by id
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetArtistById")]
         public async Task<IActionResult> Get(int id)
         {
 
@@ -63,13 +90,13 @@ namespace SpotifyApi.Controllers
 
             var mappedArtist = _mapper.Map<ArtistDto>(artist);
 
-            return Ok(mappedArtist);
+            return Ok(_linkService.CreateLinks(mappedArtist));
 
         }
 
 
         //delete a specific artists
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteArtist")]
         public async Task<IActionResult> Delete(int id)
         {
             var artist = await _artistRepo.GetByIdAsync(id);
@@ -83,13 +110,13 @@ namespace SpotifyApi.Controllers
 
             var mappedArtist = _mapper.Map<ArtistDto>(artist);
 
-            return Ok(mappedArtist);
+            return Ok(_linkService.CreateLinks(mappedArtist));
 
         }
 
 
         //update a specific artist
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "UpdateArtist")]
         public async Task<IActionResult> Update(int id, [FromBody] ArtistDto artistDto)
         {
 
@@ -101,7 +128,7 @@ namespace SpotifyApi.Controllers
 
             var mappedUpdatedArtist = _mapper.Map<ArtistDto>(updatedArtist);
 
-            return Ok(mappedUpdatedArtist);
+            return Ok(_linkService.CreateLinks(mappedUpdatedArtist));
         }
 
     }

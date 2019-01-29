@@ -39,6 +39,7 @@ namespace SpotifyApi
             //configuring services for links in controllers
             services.AddScoped<ILinkService<TrackDto>, TrackLinkService>();
             services.AddScoped<ILinkService<AlbumDto>, AlbumLinkService>();
+            services.AddScoped<ILinkService<ArtistDto>, ArtistLinkService>();
 
 
             //for constructing links

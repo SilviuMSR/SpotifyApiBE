@@ -24,7 +24,7 @@ namespace SpotifyApi.Controllers
 
 
         public AlbumController(IAlbmRepo albumRepo, 
-            IMapper mapper
+            IMapper mapper,
             ILinkService<AlbumDto> linkService)
         {
             _albumRepo = albumRepo;
@@ -34,10 +34,30 @@ namespace SpotifyApi.Controllers
 
 
         [HttpGet(Name = "GetAlbums")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
         {
-            var albums = await _albumRepo.GetAllAsync();
+            var albums = _albumRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
             var mappedAlbums = _mapper.Map<IEnumerable<AlbumDto>>(albums);
+
+            //Construct links to previous+ next page
+            var previousPage = albums.HasPrevious ?
+                _linkService.CreateResourceUri(resourceParameters, ResourceType.PreviousPage) : null;
+
+            var nextPage = albums.HasNext ?
+                _linkService.CreateResourceUri(resourceParameters, ResourceType.NextPage) : null;
+
+            var paginationMetadata = new
+            {
+                totalCount = albums.TotalCount,
+                pageSize = albums.PageSize,
+                currentPage = albums.CurrentPage,
+                totalPages = albums.TotalPages,
+                previousPageLink = previousPage,
+                nextPageLink = nextPage
+            };
+
+            Response.Headers.Add("X-Pagination",
+                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
 
             return Ok(mappedAlbums);
         }
@@ -54,7 +74,7 @@ namespace SpotifyApi.Controllers
 
             var mappedAlbum = _mapper.Map<AlbumDto>(album);
 
-            return Ok(mappedAlbum);
+            return Ok(_linkService.CreateLinks(mappedAlbum));
         }
 
         [HttpPost(Name = "CreateAlbum")]
@@ -67,7 +87,7 @@ namespace SpotifyApi.Controllers
 
             var mappedAlbum = _mapper.Map<AlbumDto>(album);
             
-            return StatusCode(201);
+            return Ok(_linkService.CreateLinks(mappedAlbum));
         }
 
         [HttpDelete("{id}", Name = "DeleteAlbum")]
@@ -84,7 +104,7 @@ namespace SpotifyApi.Controllers
 
             var mappedAlbum = _mapper.Map<AlbumDto>(album);
 
-            return Ok(mappedAlbum);
+            return Ok(_linkService.CreateLinks(mappedAlbum));
         }
 
 
@@ -99,7 +119,7 @@ namespace SpotifyApi.Controllers
 
             var mappedUpdatedAlbum = _mapper.Map<AlbumDto>(updatedAlbum);
 
-            return Ok(mappedUpdatedAlbum);
+            return Ok(_linkService.CreateLinks(mappedUpdatedAlbum));
         }
 
     }

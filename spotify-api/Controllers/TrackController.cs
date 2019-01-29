@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Logic.Links;
+using System.Collections.Generic;
 
 namespace SpotifyApi.Controllers
 {
@@ -18,18 +19,16 @@ namespace SpotifyApi.Controllers
     {
         private readonly ITrackRepo _trackRepo;
         private readonly IMapper _mapper;
-        private readonly IUrlHelper _urlHelper;
         private readonly ILinkService<TrackDto> _linkService;
 
 
         public TrackController(ITrackRepo trackRepo, 
             IMapper mapper,
-            IUrlHelper urlHelper,
             ILinkService<TrackDto> linkService)
         {
             _trackRepo = trackRepo;
             _mapper = mapper;
-            _urlHelper = urlHelper;
+
             _linkService = linkService;
         }
 
@@ -40,6 +39,7 @@ namespace SpotifyApi.Controllers
             var tracks = _trackRepo.GetAllPaginationAsync(resourceParameters.PageNumber,
                 resourceParameters.PageSize);
 
+            var mappedTracks = _mapper.Map<IEnumerable<TrackDto>>(tracks);
 
             //constructing links to previous and next pages
             var previousPage = tracks.HasPrevious ?
@@ -61,7 +61,7 @@ namespace SpotifyApi.Controllers
             Response.Headers.Add("X-Pagination",
                 Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
 
-            return Ok(tracks);
+            return Ok(mappedTracks);
         }
 
         //this part must be refactored and added to another folder
