@@ -7,7 +7,6 @@ using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.EntityModels;
 using SpotifyApi.Domain.Logic.Links;
 using SpotifyApi.Domain.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
