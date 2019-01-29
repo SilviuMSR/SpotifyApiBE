@@ -36,7 +36,6 @@ namespace SpotifyApi
             services.AddScoped<IAlbmRepo,AlbumRepo>();
             services.AddScoped<IArtistRepo, ArtistRepo>();
             services.AddScoped<ITrackRepo, TrackRepo>();
-
             services.AddScoped<IPlaylistAlbum, PlaylistAlbumRepo>();
             services.AddScoped<IPlaylistArtist, PlaylistArtistRepo>();
             services.AddScoped<IPlaylistTrack, PlaylistTrackRepo>();
@@ -49,10 +48,6 @@ namespace SpotifyApi
             services.AddScoped<ILinkService<PlaylistArtistDto>, PlaylistArtistLinkService>();
             services.AddScoped<ILinkService<PlaylistTrackDto>, PlaylistTrackLinkService>();
 
-
-
-
-
             //for constructing links
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper, UrlHelper>(implementationFactory =>
@@ -63,9 +58,7 @@ namespace SpotifyApi
                 return new UrlHelper(actionContext);
             });
        
-
             services.AddCors();
-
 
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             //configure authorization
