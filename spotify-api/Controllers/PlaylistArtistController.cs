@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.EntityModels;
+using SpotifyApi.Domain.Logic.Links;
 using SpotifyApi.Domain.Services;
 using System;
 using System.Collections.Generic;
@@ -21,27 +23,62 @@ namespace SpotifyApi.Controllers
 
         private readonly IPlaylistArtist _playlistArtistRepo;
         private readonly IMapper _mapper;
+        private readonly ILinkService<PlaylistArtistDto> _linkService;
 
-        public PlaylistArtistController(IPlaylistArtist playlistArtistRepo, IMapper mapper)
+        public PlaylistArtistController(IPlaylistArtist playlistArtistRepo, 
+            IMapper mapper,
+            ILinkService<PlaylistArtistDto> linkService)
         {
             _playlistArtistRepo = playlistArtistRepo;
             _mapper = mapper;
+            _linkService = linkService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet(Name = "GetPlaylistArtists")]
+        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
         {
-            var artists = await _playlistArtistRepo.GetAllAsync();
+            var artists = _playlistArtistRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var mappedArtists = _mapper.Map<IEnumerable<PlaylistArtistDto>>(artists);
 
-            return Ok(artists);
+            //construct links to previus+next page
+            var previousPage = artists.HasPrevious ?
+               _linkService.CreateResourceUri(resourceParameters, ResourceType.PreviousPage) : null;
+
+            var nextPage = artists.HasNext ?
+                _linkService.CreateResourceUri(resourceParameters, ResourceType.NextPage) : null;
+
+            mappedArtists = mappedArtists.Select(artist =>
+            {
+                artist = _linkService.CreateLinks(artist);
+                return artist;
+            });
+
+            var paginationMetadata = new
+            {
+                totalCount = artists.TotalCount,
+                pageSize = artists.PageSize,
+                currentPage = artists.CurrentPage,
+                totalPages = artists.TotalPages,
+                previousPageLink = previousPage,
+                nextPageLink = nextPage
+            };
+
+            Response.Headers.Add("X-Pagination",
+                JsonConvert.SerializeObject(paginationMetadata));
+
+            return Ok(mappedArtists);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreatePlaylistArtist")]
         public async Task<IActionResult> Post([FromBody] PlaylistArtistDto artistDto)
         {
             var artist = _mapper.Map<PlaylistArtist>(artistDto);
+
             _playlistArtistRepo.Add(artist);
-            return Ok(artist);
+
+            var mappedArtist = _mapper.Map<PlaylistArtistDto>(artist);
+
+            return Ok(_linkService.CreateLinks(mappedArtist));
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SpotifyApi.Domain.EntityModels;
+using SpotifyApi.Domain.Logic;
 
 namespace SpotifyApi.Domain.Services
 {
@@ -17,15 +18,16 @@ namespace SpotifyApi.Domain.Services
             _context = context;
         }
 
-        public void Add(PlaylistAlbum t)
+        public async void Add(PlaylistAlbum t)
         {
             _context.PlaylistAlbums.Add(t);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(PlaylistAlbum t)
+        public async void Delete(PlaylistAlbum t)
         {
-            throw new NotImplementedException();
+            _context.PlaylistAlbums.Remove(t);
+            await _context.SaveChangesAsync();
         }
 
         public Task<List<PlaylistAlbum>> GetAllAsync()
@@ -35,6 +37,13 @@ namespace SpotifyApi.Domain.Services
                 .ToListAsync();
         }
 
+        public PagedList<PlaylistAlbum> GetAllPaginationAsync(int pageNumber, int pageSize)
+        {
+            var collectionBeforePaging = _context.PlaylistAlbums.Include(t => t.Tracks);
+            
+            return PagedList<PlaylistAlbum>.Create(collectionBeforePaging, pageNumber, pageSize);
+        }
+
         public Task<PlaylistAlbum> GetByIdAsync(int id)
         {
             var album = _context.PlaylistAlbums.Include(t => t.Tracks).FirstOrDefaultAsync(a => a.PlaylistAlbumId == id);
@@ -42,9 +51,20 @@ namespace SpotifyApi.Domain.Services
             return album;
         }
 
-        public void Update(int id, PlaylistAlbum t)
+        public async void Update(int id, PlaylistAlbum t)
         {
-            throw new NotImplementedException();
+            var playlistAlbum = await _context.PlaylistAlbums.Include(track => track.Tracks).FirstOrDefaultAsync(a => a.PlaylistAlbumId == id);
+
+            playlistAlbum.ImgUri = t.ImgUri;
+            playlistAlbum.Name = t.Name;
+            playlistAlbum.PlaylistAlbumId = t.PlaylistAlbumId;
+            playlistAlbum.Tracks = t.Tracks;
+            playlistAlbum.Type = t.Type;
+
+            _context.PlaylistAlbums.Update(playlistAlbum);
+
+            await _context.SaveChangesAsync();
+
         }
     }
 }

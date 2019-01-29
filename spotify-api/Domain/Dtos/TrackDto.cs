@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SpotifyApi.Domain.Dtos
 {
-    public class TrackDto
+    public class TrackDto : LinkedResourceBaseDto
     {
         public int TrackId { get; set; }
 
@@ -17,6 +14,5 @@ namespace SpotifyApi.Domain.Dtos
 
         public ICollection<ArtistDto> Artists { get; set; }
 
-        public List<Link> Links { get; set; }
     }
 }

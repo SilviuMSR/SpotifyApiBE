@@ -12555,11 +12555,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\SpotifyApiBE\\spotify-api\\SpotifyApi.csproj",
+      "projectUniqueName": "C:\\Users\\Student\\Desktop\\SpotifyApiBE-master\\spotify-api\\SpotifyApi.csproj",
       "projectName": "SpotifyApi",
-      "projectPath": "D:\\SpotifyApiBE\\spotify-api\\SpotifyApi.csproj",
+      "projectPath": "C:\\Users\\Student\\Desktop\\SpotifyApiBE-master\\spotify-api\\SpotifyApi.csproj",
       "packagesPath": "C:\\Users\\Student\\.nuget\\packages\\",
-      "outputPath": "D:\\SpotifyApiBE\\spotify-api\\obj\\",
+      "outputPath": "C:\\Users\\Student\\Desktop\\SpotifyApiBE-master\\spotify-api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -12621,13 +12621,5 @@
         "warn": true
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file D:\\SpotifyApiBE\\spotify-api\\obj\\SpotifyApi.csproj.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  }
 }

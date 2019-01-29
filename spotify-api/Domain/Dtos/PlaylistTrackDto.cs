@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Dtos
 {
-    public class PlaylistTrackDto
+    public class PlaylistTrackDto : LinkedResourceBaseDto
     {
         public int PlaylistTrackId { get; set; }
 

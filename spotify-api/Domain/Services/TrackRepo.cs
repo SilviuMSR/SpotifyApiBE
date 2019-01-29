@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SpotifyApi.Domain.Logic;
 using SpotifyApi.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -16,16 +17,16 @@ namespace SpotifyApi.Domain.Services
             _context = context;
         }
 
-        public void Add(Track t)
+        public async void Add(Track t)
         {
             _context.Add(t);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(Track t)
+        public async void Delete(Track t)
         {
             _context.Remove(t);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public Task<List<Track>> GetAllAsync()
@@ -35,6 +36,13 @@ namespace SpotifyApi.Domain.Services
                 .ToListAsync();
         }
 
+        public PagedList<Track> GetAllPaginationAsync(int pageNumber, int pageSize)
+        {
+            var collectionBeforPaging = _context.Tracks.Include(a => a.Artists);
+
+            return PagedList<Track>.Create(collectionBeforPaging, pageNumber, pageSize);
+        }
+
         public Task<Track> GetByIdAsync(int id)
         {
             return _context.Tracks
@@ -42,9 +50,9 @@ namespace SpotifyApi.Domain.Services
                 .FirstOrDefaultAsync(t => t.TrackId == id);
         }
 
-        public void Update(int id, Track newTrack)
+        public async void Update(int id, Track newTrack)
         {
-            var track = _context.Tracks.FirstOrDefault(t => t.TrackId == id);
+            var track = await _context.Tracks.FirstOrDefaultAsync(t => t.TrackId == id);
 
             track.Artists = newTrack.Artists;
             track.Name = newTrack.Name;
@@ -53,8 +61,7 @@ namespace SpotifyApi.Domain.Services
 
             _context.Tracks.Update(track);
 
-            _context.SaveChanges();
-      
+            await _context.SaveChangesAsync();
         }
     }
 }
