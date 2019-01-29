@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Models;
 using SpotifyApi.Domain.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
-using SpotifyApi.Domain.Logic;
+using SpotifyApi.Domain.Logic.Links;
 
 namespace SpotifyApi.Controllers
 {
@@ -24,22 +19,47 @@ namespace SpotifyApi.Controllers
         private readonly ITrackRepo _trackRepo;
         private readonly IMapper _mapper;
         private readonly IUrlHelper _urlHelper;
+        private readonly ILinkService<TrackDto> _linkService;
 
 
         public TrackController(ITrackRepo trackRepo, 
             IMapper mapper,
-            IUrlHelper urlHelper)
+            IUrlHelper urlHelper,
+            ILinkService<TrackDto> linkService)
         {
             _trackRepo = trackRepo;
             _mapper = mapper;
             _urlHelper = urlHelper;
+            _linkService = linkService;
         }
 
-        [HttpGet(Name = "Get Tracks")]
+        [HttpGet(Name = "GetTracks")]
         public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
         {
             //Also must modify paginationAsync name since it is not async
-            var tracks = _trackRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var tracks = _trackRepo.GetAllPaginationAsync(resourceParameters.PageNumber,
+                resourceParameters.PageSize);
+
+
+            //constructing links to previous and next pages
+            var previousPage = tracks.HasPrevious ?
+                _linkService.CreateResourceUri(resourceParameters, ResourceType.PreviousPage) : null;
+
+            var nextPage = tracks.HasNext ?
+                _linkService.CreateResourceUri(resourceParameters, ResourceType.NextPage) : null;
+
+            var paginationMetadata = new
+            {
+                totalCount = tracks.TotalCount,
+                pageSize = tracks.PageSize,
+                currentPage = tracks.CurrentPage,
+                totalPages = tracks.TotalPages,
+                previousPageLink = previousPage,
+                nextPageLink = nextPage
+            };
+
+            Response.Headers.Add("X-Pagination",
+                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
 
             return Ok(tracks);
         }
@@ -47,7 +67,7 @@ namespace SpotifyApi.Controllers
         //this part must be refactored and added to another folder
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetTrackById")]
         public async Task<IActionResult> Get(int id)
         {
             var track = await _trackRepo.GetByIdAsync(id);
@@ -59,22 +79,22 @@ namespace SpotifyApi.Controllers
 
             var mappedTrack = _mapper.Map<TrackDto>(track);
 
-            return Ok(mappedTrack);
+            return Ok(_linkService.CreateLinks(mappedTrack));
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateTrack")]
         public async Task<IActionResult> Post([FromBody] TrackDto trackDto)
         {
             var track = _mapper.Map<Track>(trackDto);
 
             _trackRepo.Add(track);
 
-            var mappedTrack = _mapper.Map<Track>(track);
+            var mappedTrack = _mapper.Map<TrackDto>(track);
 
-            return StatusCode(201);
+            return Ok(_linkService.CreateLinks(mappedTrack));
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "UpdateTrack")]
         public async Task<IActionResult> Update(int id, [FromBody] TrackDto trackDto)
         {
 
@@ -86,10 +106,10 @@ namespace SpotifyApi.Controllers
 
             var updatedTrack = _mapper.Map<TrackDto>(newTrack);
 
-            return Ok(updatedTrack);
+            return Ok(_linkService.CreateLinks(updatedTrack));
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteTrack")]
         public async Task<IActionResult> Delete(int id)
         {
             var track = await _trackRepo.GetByIdAsync(id);
@@ -102,8 +122,9 @@ namespace SpotifyApi.Controllers
             _trackRepo.Delete(track);
 
             var mappedTrack = _mapper.Map<TrackDto>(track);
+            
 
-            return Ok(mappedTrack);
+            return Ok(_linkService.CreateLinks(mappedTrack));
         }
     }
 

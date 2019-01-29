@@ -14,6 +14,7 @@ using System.Text;
 using SpotifyApi.Domain.Dtos;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using SpotifyApi.Domain.Logic.Links;
 
 namespace SpotifyApi
 {
@@ -35,6 +36,11 @@ namespace SpotifyApi
             services.AddScoped<IAlbmRepo,AlbumRepo>();
             services.AddScoped<IArtistRepo, ArtistRepo>();
             services.AddScoped<ITrackRepo, TrackRepo>();
+            //configuring services for links in controllers
+            services.AddScoped<ILinkService<TrackDto>, TrackLinkService>();
+            services.AddScoped<ILinkService<AlbumDto>, AlbumLinkService>();
+
+
             //for constructing links
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper, UrlHelper>(implementationFactory =>

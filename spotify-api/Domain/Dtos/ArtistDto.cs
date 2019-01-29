@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Dtos
 {
-    public class ArtistDto
+    public class ArtistDto : LinkedResourceBaseDto
     {
         public int ArtistId { get; set; }
 
@@ -15,7 +15,6 @@ namespace SpotifyApi.Domain.Dtos
 
         public string ImgUri { get; set; }
 
-        public List<Link> Links { get; set; }
 
     }
 }

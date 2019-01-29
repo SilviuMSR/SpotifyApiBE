@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
 using System.Collections.Generic;
+using SpotifyApi.Domain.Logic.Links;
 
 namespace SpotifyApi.Controllers
 {
@@ -19,16 +20,20 @@ namespace SpotifyApi.Controllers
     {
         private readonly IAlbmRepo _albumRepo;
         private readonly IMapper _mapper;
+        private readonly ILinkService<AlbumDto> _linkService;
 
 
-        public AlbumController(IAlbmRepo albumRepo, IMapper mapper)
+        public AlbumController(IAlbmRepo albumRepo, 
+            IMapper mapper
+            ILinkService<AlbumDto> linkService)
         {
             _albumRepo = albumRepo;
             _mapper = mapper;
+            _linkService = linkService;
         }
 
 
-        [HttpGet(Name = "Get Albums")]
+        [HttpGet(Name = "GetAlbums")]
         public async Task<IActionResult> Get()
         {
             var albums = await _albumRepo.GetAllAsync();
@@ -37,7 +42,7 @@ namespace SpotifyApi.Controllers
             return Ok(mappedAlbums);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetAlbumById")]
         public async Task<IActionResult> Get(int id)
         {
             var album = await _albumRepo.GetByIdAsync(id);
@@ -52,7 +57,7 @@ namespace SpotifyApi.Controllers
             return Ok(mappedAlbum);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateAlbum")]
         public async Task<IActionResult> Post([FromBody] AlbumDto albumDto)
         {
             //mapping dto to entity
@@ -65,7 +70,7 @@ namespace SpotifyApi.Controllers
             return StatusCode(201);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteAlbum")]
         public async Task<IActionResult> Delete(int id)
         {
             var album = await _albumRepo.GetByIdAsync(id);
@@ -83,7 +88,7 @@ namespace SpotifyApi.Controllers
         }
 
 
-        [HttpPut("{id}", Name = "Update Album")]
+        [HttpPut("{id}", Name = "UpdateAlbum")]
         public async Task<IActionResult> Update(int id, [FromBody] AlbumDto albumDto)
         {
             var album = _mapper.Map<Album>(albumDto);
