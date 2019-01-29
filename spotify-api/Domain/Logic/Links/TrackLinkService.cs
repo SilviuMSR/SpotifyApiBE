@@ -18,7 +18,7 @@ namespace SpotifyApi.Domain.Logic.Links
 
             track.Links.Add(new Link(_urlHelper.Link("GetTracks",
                 new { }),
-                "self",
+                "get_all",
                 "GET"));
 
             track.Links.Add(new Link(_urlHelper.Link("DeleteTrack",
@@ -35,7 +35,7 @@ namespace SpotifyApi.Domain.Logic.Links
 
             track.Links.Add(new Link(_urlHelper.Link("UpdateTrack",
              new { id = track.TrackId }),
-             "self",
+             "update_self",
              "PUT"));
 
             return track;

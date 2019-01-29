@@ -8,6 +8,7 @@ using AutoMapper;
 using SpotifyApi.Domain.Dtos;
 using System.Collections.Generic;
 using SpotifyApi.Domain.Logic.Links;
+using System.Linq;
 
 namespace SpotifyApi.Controllers
 {
@@ -45,6 +46,12 @@ namespace SpotifyApi.Controllers
 
             var nextPage = albums.HasNext ?
                 _linkService.CreateResourceUri(resourceParameters, ResourceType.NextPage) : null;
+
+            mappedAlbums = mappedAlbums.Select(album =>
+            {
+                album = _linkService.CreateLinks(album);
+                return album;
+            });
 
             var paginationMetadata = new
             {

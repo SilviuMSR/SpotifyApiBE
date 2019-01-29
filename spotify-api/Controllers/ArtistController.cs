@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Logic.Links;
+using System.Linq;
 
 namespace SpotifyApi.Controllers
 {
@@ -37,7 +38,7 @@ namespace SpotifyApi.Controllers
         public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
         {
             var artists = _artistRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
-            var mappedArtists = _mapper.Map<IEnumerable<Artist>>(artists);
+            var mappedArtists = _mapper.Map<IEnumerable<ArtistDto>>(artists);
 
             //constructing links to previus next page
             var previousPage = artists.HasPrevious ?
@@ -55,6 +56,12 @@ namespace SpotifyApi.Controllers
                 previousPageLink = previousPage,
                 nextPageLink = nextPage
             };
+
+            mappedArtists = mappedArtists.Select(artist =>
+            {
+                artist = _linkService.CreateLinks(artist);
+                return artist;
+            });
 
             Response.Headers.Add("X-Pagination",
                 Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));

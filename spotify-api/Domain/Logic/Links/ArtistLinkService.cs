@@ -20,7 +20,7 @@ namespace SpotifyApi.Domain.Logic.Links
         {
             t.Links.Add(new Link(_urlHelper.Link("GetArtists",
                  new { }),
-                 "self",
+                 "get_all",
                  "GET"));
 
             t.Links.Add(new Link(_urlHelper.Link("DeleteArtist",
@@ -37,7 +37,7 @@ namespace SpotifyApi.Domain.Logic.Links
 
             t.Links.Add(new Link(_urlHelper.Link("UpdateArtist",
              new { id = t.ArtistId }),
-             "self",
+             "update_self",
              "PUT"));
 
             return t;
