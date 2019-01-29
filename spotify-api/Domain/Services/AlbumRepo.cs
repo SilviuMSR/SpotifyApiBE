@@ -17,10 +17,10 @@ namespace SpotifyApi.Domain.Services
             _context = context;
         }
 
-        public async void Add(Album t)
+        public void Add(Album t)
         {
             _context.Albums.Add(t);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public async void Delete(Album t)

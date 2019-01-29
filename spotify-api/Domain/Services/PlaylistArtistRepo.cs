@@ -24,10 +24,10 @@ namespace SpotifyApi.Domain.Services
             _context.SaveChanges();
         }
 
-        public async void Delete(PlaylistArtist t)
+        public void Delete(PlaylistArtist t)
         {
             _context.PlaylistArtists.Remove(t);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public Task<List<PlaylistArtist>> GetAllAsync()

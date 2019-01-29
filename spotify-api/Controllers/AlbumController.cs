@@ -63,10 +63,11 @@ namespace SpotifyApi.Controllers
                 nextPageLink = nextPage
             };
 
-            Response.Headers.Add("X-Pagination",
-                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
-
-            return Ok(mappedAlbums);
+            return Ok(new
+            {
+                values = mappedAlbums,
+                links = paginationMetadata
+            });
         }
 
         [HttpGet("{id}", Name = "GetAlbumById")]
