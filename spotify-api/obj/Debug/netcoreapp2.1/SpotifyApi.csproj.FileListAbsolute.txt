@@ -68,3 +68,17 @@ C:\Users\Bogdan\Desktop\SpotifyApiBE-master\spotify-api\obj\Debug\netcoreapp2.1\
 C:\Users\Bogdan\Desktop\SpotifyApiBE-master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.dll
 C:\Users\Bogdan\Desktop\SpotifyApiBE-master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.pdb
 C:\Users\Student\Desktop\SpotifyApiBE-master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.csprojAssemblyReference.cache
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.deps.json
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.runtimeconfig.json
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.runtimeconfig.dev.json
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.dll
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\bin\Debug\netcoreapp2.1\SpotifyApi.pdb
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.csprojAssemblyReference.cache
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.csproj.CoreCompileInputs.cache
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.RazorAssemblyInfo.cache
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.RazorAssemblyInfo.cs
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.AssemblyInfoInputs.cache
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.AssemblyInfo.cs
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.RazorTargetAssemblyInfo.cache
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.dll
+C:\Users\Student\Desktop\SpotifyApiBE-master\master\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.pdb

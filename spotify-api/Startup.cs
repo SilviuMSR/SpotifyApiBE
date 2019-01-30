@@ -15,6 +15,7 @@ using SpotifyApi.Domain.Dtos;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SpotifyApi.Domain.Logic.Links;
+using SpotifyApi.Domain.Logic.Middleware;
 
 namespace SpotifyApi
 {
@@ -36,9 +37,10 @@ namespace SpotifyApi
             services.AddScoped<IAlbmRepo,AlbumRepo>();
             services.AddScoped<IArtistRepo, ArtistRepo>();
             services.AddScoped<ITrackRepo, TrackRepo>();
-            services.AddScoped<IPlaylistAlbum, PlaylistAlbumRepo>();
+            services.AddScoped<IPlaylistAlbumRepo, PlaylistAlbumRepo>();
             services.AddScoped<IPlaylistArtist, PlaylistArtistRepo>();
-            services.AddScoped<IPlaylistTrack, PlaylistTrackRepo>();
+            services.AddScoped<IPlaylistTrackRepo, PlaylistTrackRepo>();
+            services.AddScoped<IRequestRepo, RequestRepo>();
 
             //configuring services for links in controllers
             services.AddScoped<ILinkService<TrackDto>, TrackLinkService>();
@@ -60,7 +62,8 @@ namespace SpotifyApi
        
             services.AddCors();
 
-            services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(opt =>
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             //configure authorization
             IdentityBuilder builder = services.AddIdentityCore<User>(opt => 
             {
@@ -125,6 +128,8 @@ namespace SpotifyApi
             {
                 app.UseHsts();
             }
+
+            app.UseMiddleware<RequestsObservatorMiddleware>();
 
             app.UseCors(builder => 
                 builder.AllowAnyOrigin()

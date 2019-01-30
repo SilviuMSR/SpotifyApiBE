@@ -23,7 +23,6 @@ namespace SpotifyApi.Controllers
         private readonly IMapper _mapper;
         private readonly ILinkService<AlbumDto> _linkService;
 
-
         public AlbumController(IAlbmRepo albumRepo, 
             IMapper mapper,
             ILinkService<AlbumDto> linkService)
@@ -50,6 +49,7 @@ namespace SpotifyApi.Controllers
             mappedAlbums = mappedAlbums.Select(album =>
             {
                 album = _linkService.CreateLinks(album);
+
                 return album;
             });
 
@@ -88,6 +88,11 @@ namespace SpotifyApi.Controllers
         [HttpPost(Name = "CreateAlbum")]
         public async Task<IActionResult> Post([FromBody] AlbumDto albumDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             //mapping dto to entity
             var album = _mapper.Map<Album>(albumDto);
 
@@ -119,6 +124,11 @@ namespace SpotifyApi.Controllers
         [HttpPut("{id}", Name = "UpdateAlbum")]
         public async Task<IActionResult> Update(int id, [FromBody] AlbumDto albumDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var album = _mapper.Map<Album>(albumDto);
             
             _albumRepo.Update(id, album);

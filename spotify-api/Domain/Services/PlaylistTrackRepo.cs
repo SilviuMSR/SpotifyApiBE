@@ -8,7 +8,7 @@ using SpotifyApi.Domain.Logic;
 
 namespace SpotifyApi.Domain.Services
 {
-    public class PlaylistTrackRepo : IPlaylistTrack
+    public class PlaylistTrackRepo : IPlaylistTrackRepo
     {
 
         private readonly DataContext _context;

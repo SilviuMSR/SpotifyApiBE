@@ -71,6 +71,11 @@ namespace SpotifyApi.Controllers
         [HttpPost(Name = "CreatePlaylistArtist")]
         public async Task<IActionResult> Post([FromBody] PlaylistArtistDto artistDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var artist = _mapper.Map<PlaylistArtist>(artistDto);
 
             _playlistArtistRepo.Add(artist);

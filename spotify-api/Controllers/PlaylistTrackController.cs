@@ -19,16 +19,17 @@ namespace SpotifyApi.Controllers
     [ApiController]
     public class PlaylistTrackController : ControllerBase
     {
-        private readonly IPlaylistTrack _playlistTrackRepo;
+        private readonly IPlaylistTrackRepo _playlistTrackRepo;
         private readonly IMapper _mapper;
         private readonly ILinkService<PlaylistTrackDto> _linkService;
 
-        public PlaylistTrackController(IPlaylistTrack playlistTrackRepo,
+        public PlaylistTrackController(IPlaylistTrackRepo playlistTrackRepo,
             IMapper mapper,
             ILinkService<PlaylistTrackDto> linkService)
         {
             _playlistTrackRepo = playlistTrackRepo;
             _mapper = mapper;
+            _linkService = linkService;
         }
 
         [HttpGet(Name = "GetPlaylistTracks")]
@@ -69,6 +70,11 @@ namespace SpotifyApi.Controllers
         [HttpPost(Name = "CreatePlaylistTrack")]
         public async Task<IActionResult> Post([FromBody] PlaylistTrackDto trackDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var track = _mapper.Map<PlaylistTrack>(trackDto);
 
             _playlistTrackRepo.Add(track);

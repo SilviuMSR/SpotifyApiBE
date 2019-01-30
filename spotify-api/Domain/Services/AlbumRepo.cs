@@ -61,9 +61,9 @@ namespace SpotifyApi.Domain.Services
             return album;
         }
 
-        public async void Update(int id, Album newAlbum)
+        public void Update(int id, Album newAlbum)
         {
-            var album = await  _context.Albums.Include(t => t.Tracks).FirstOrDefaultAsync(a => a.AlbumId == id);
+            var album = _context.Albums.Include(t => t.Tracks).FirstOrDefault(a => a.AlbumId == id);
 
             album.ImgUri = newAlbum.ImgUri;
             album.Name = newAlbum.Name;

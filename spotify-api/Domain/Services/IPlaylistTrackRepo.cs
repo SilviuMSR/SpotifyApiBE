@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Services
 {
-    public interface IPlaylistAlbum : IRepo<PlaylistAlbum>
+    public interface IPlaylistTrackRepo : IRepo<PlaylistTrack>
     {
 
     }

@@ -21,11 +21,11 @@ namespace SpotifyApi.Controllers
     public class PlaylistAlbumController : ControllerBase
     {
 
-        private readonly IPlaylistAlbum _playlistAlbumRepo;
+        private readonly IPlaylistAlbumRepo _playlistAlbumRepo;
         private readonly IMapper _mapper;
         private readonly ILinkService<PlaylistAlbumDto> _linkService;
 
-        public PlaylistAlbumController(IPlaylistAlbum playlistAlbumRepo, 
+        public PlaylistAlbumController(IPlaylistAlbumRepo playlistAlbumRepo, 
             IMapper mapper,
             ILinkService<PlaylistAlbumDto> linkService)
         {
@@ -75,6 +75,11 @@ namespace SpotifyApi.Controllers
         [HttpPost(Name = "CreatePlaylistAlbum")]
         public async Task<IActionResult> Post([FromBody] PlaylistAlbumDto albumDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var album = _mapper.Map<PlaylistAlbum>(albumDto);
 
             _playlistAlbumRepo.Add(album);

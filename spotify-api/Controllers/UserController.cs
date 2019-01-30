@@ -41,6 +41,11 @@ namespace SpotifyApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDto userDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var user = _mapper.Map<User>(userDto);
 
             var usr = await _userManager.FindByNameAsync(user.UserName);

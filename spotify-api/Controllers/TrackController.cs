@@ -93,6 +93,11 @@ namespace SpotifyApi.Controllers
         [HttpPost(Name = "CreateTrack")]
         public async Task<IActionResult> Post([FromBody] TrackDto trackDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var track = _mapper.Map<Track>(trackDto);
 
             _trackRepo.Add(track);
@@ -105,6 +110,11 @@ namespace SpotifyApi.Controllers
         [HttpPut("{id}", Name = "UpdateTrack")]
         public async Task<IActionResult> Update(int id, [FromBody] TrackDto trackDto)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
             var mappedTrack = _mapper.Map<Track>(trackDto);
 
