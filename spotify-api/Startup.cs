@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SpotifyApi.Domain.Logic.Links;
 using SpotifyApi.Domain.Logic.Middleware;
+using SpotifyApi.Domain.Logic.AuxServicies.IAuxServicies;
+using SpotifyApi.Domain.Logic.AuxServicies;
 
 namespace SpotifyApi
 {
@@ -49,6 +51,9 @@ namespace SpotifyApi
             services.AddScoped<ILinkService<PlaylistAlbumDto>, PlaylistAlbumLinkService>();
             services.AddScoped<ILinkService<PlaylistArtistDto>, PlaylistArtistLinkService>();
             services.AddScoped<ILinkService<PlaylistTrackDto>, PlaylistTrackLinkService>();
+
+            //service for middleware user agent
+            services.AddScoped<IAuxUserAgentService, SwaggerUiService>();
 
             //for constructing links
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();

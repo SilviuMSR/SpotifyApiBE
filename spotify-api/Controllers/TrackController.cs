@@ -66,14 +66,12 @@ namespace SpotifyApi.Controllers
                 nextPageLink = nextPage
             };
 
-            Response.Headers.Add("X-Pagination",
-                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
-
-            return Ok(mappedTracks);
+            return Ok(new
+            {
+                Values = mappedTracks,
+                Links = paginationMetadata
+            });
         }
-
-        //this part must be refactored and added to another folder
-
 
         [HttpGet("{id}", Name = "GetTrackById")]
         public async Task<IActionResult> Get(int id)

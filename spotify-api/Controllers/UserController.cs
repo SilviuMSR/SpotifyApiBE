@@ -13,6 +13,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Logic;
 
 namespace SpotifyApi.Controllers
 {
@@ -64,7 +65,7 @@ namespace SpotifyApi.Controllers
 
                 return Ok(new
                 {
-                    token = GenerateJwtToken(usr)
+                    token = TokenGenerator.GenerateJwtToken(usr, _mapper, _config)
                 });
             }
 
@@ -85,37 +86,5 @@ namespace SpotifyApi.Controllers
 
             return BadRequest(result.Errors);
         }
-
-        private string GenerateJwtToken(User user)
-        {
-
-            var mappedUser = _mapper.Map<UserDto>(user);
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, mappedUser.Id.ToString()),
-                new Claim(ClaimTypes.Name, mappedUser.UserName)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds,
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-
-            return tokenHandler.WriteToken(token);
-
-        }
-
     }
 }

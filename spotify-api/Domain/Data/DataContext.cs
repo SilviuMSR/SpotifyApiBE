@@ -27,6 +27,7 @@ namespace SpotifyApi.Domain.Services
         public DbSet<PlaylistAlbum> PlaylistAlbums { get; set; }
         public DbSet<PlaylistArtist> PlaylistArtists { get; set; }
         public DbSet<PlaylistTrack> PlaylistTracks { get; set; }
+        public DbSet<UserAgent> UserAgents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

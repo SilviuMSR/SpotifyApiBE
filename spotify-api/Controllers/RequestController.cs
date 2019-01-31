@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Services;
 
 namespace SpotifyApi.Controllers
@@ -21,11 +22,14 @@ namespace SpotifyApi.Controllers
         }
 
         // GET: api/Request
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet(Name = "GetRequests")]
+        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
         {
-            return new string[] { "value1", "value2" };
-        }
 
+            //task: add dto and links to previous next apges
+            var requests = await _requestRepo.GetAllAsync();
+
+            return Ok(requests);
+        }
     }
 }

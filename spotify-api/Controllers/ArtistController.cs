@@ -62,12 +62,11 @@ namespace SpotifyApi.Controllers
                 artist = _linkService.CreateLinks(artist);
                 return artist;
             });
-
-            Response.Headers.Add("X-Pagination",
-                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
-
-
-            return Ok(mappedArtists);
+            
+            return Ok(new {
+                Values = mappedArtists,
+                Links = paginationMetadata
+            });
         }
 
         // POST: api/Artists
