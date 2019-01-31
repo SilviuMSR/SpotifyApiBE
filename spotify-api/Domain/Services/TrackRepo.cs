@@ -50,9 +50,9 @@ namespace SpotifyApi.Domain.Services
                 .FirstOrDefaultAsync(t => t.TrackId == id);
         }
 
-        public async void Update(int id, Track newTrack)
+        public void Update(int id, Track newTrack)
         {
-            var track = await _context.Tracks.FirstOrDefaultAsync(t => t.TrackId == id);
+            var track = _context.Tracks.FirstOrDefault(t => t.TrackId == id);
 
             track.Artists = newTrack.Artists;
             track.Name = newTrack.Name;
@@ -61,7 +61,7 @@ namespace SpotifyApi.Domain.Services
 
             _context.Tracks.Update(track);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }

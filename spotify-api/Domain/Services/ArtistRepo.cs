@@ -49,9 +49,9 @@ namespace SpotifyApi.Domain.Services
             return artist;
         }
 
-        public async  void Update(int id, Artist newArtist)
+        public void Update(int id, Artist newArtist)
         {
-            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.ArtistId == id);
+            var artist = _context.Artists.FirstOrDefault(a => a.ArtistId == id);
             
             artist.ImgUri = newArtist.ImgUri;
             artist.Name = newArtist.Name;
@@ -59,7 +59,7 @@ namespace SpotifyApi.Domain.Services
 
             _context.Artists.Update(artist);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
         }
     }

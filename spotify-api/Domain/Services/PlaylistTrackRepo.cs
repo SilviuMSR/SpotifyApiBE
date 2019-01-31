@@ -24,10 +24,10 @@ namespace SpotifyApi.Domain.Services
             _context.SaveChanges();
         }
 
-        public async void Delete(PlaylistTrack t)
+        public void Delete(PlaylistTrack t)
         {
             _context.PlaylistTracks.Remove(t);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public Task<List<PlaylistTrack>> GetAllAsync()
@@ -49,9 +49,9 @@ namespace SpotifyApi.Domain.Services
             return track;
         }
 
-        public async void Update(int id, PlaylistTrack t)
+        public void Update(int id, PlaylistTrack t)
         {
-            var playlistTrack = await _context.PlaylistTracks.FirstOrDefaultAsync(a => a.PlaylistTrackId == id);
+            var playlistTrack = _context.PlaylistTracks.FirstOrDefault(a => a.PlaylistTrackId == id);
 
             playlistTrack.Name = t.Name;
             playlistTrack.PlaylistTrackId = t.PlaylistTrackId;
@@ -60,7 +60,7 @@ namespace SpotifyApi.Domain.Services
             
             _context.PlaylistTracks.Update(playlistTrack);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }

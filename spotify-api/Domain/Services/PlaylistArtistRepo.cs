@@ -51,9 +51,9 @@ namespace SpotifyApi.Domain.Services
             return artist;
         }
 
-        public async void Update(int id, PlaylistArtist t)
+        public void Update(int id, PlaylistArtist t)
         {
-            var playlistArtist = await _context.PlaylistArtists.Include(tr => tr.Tracks).FirstOrDefaultAsync(art => art.PlaylistArtistId == id);
+            var playlistArtist = _context.PlaylistArtists.Include(tr => tr.Tracks).FirstOrDefault(art => art.PlaylistArtistId == id);
 
             playlistArtist.ImgUri = t.ImgUri;
             playlistArtist.Name = t.Name;
@@ -63,7 +63,7 @@ namespace SpotifyApi.Domain.Services
 
             _context.PlaylistArtists.Update(playlistArtist);
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }
