@@ -51,6 +51,7 @@ namespace SpotifyApi
             services.AddScoped<ILinkService<PlaylistAlbumDto>, PlaylistAlbumLinkService>();
             services.AddScoped<ILinkService<PlaylistArtistDto>, PlaylistArtistLinkService>();
             services.AddScoped<ILinkService<PlaylistTrackDto>, PlaylistTrackLinkService>();
+            services.AddScoped<ILinkService<RequestDto>, RequestLinkService>();
 
             //service for middleware user agent
             services.AddScoped<IAuxUserAgentService, SwaggerUiService>();
