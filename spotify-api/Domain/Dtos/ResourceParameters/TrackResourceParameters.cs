@@ -7,5 +7,6 @@ namespace SpotifyApi.Domain.Dtos.ResourceParameters
 {
     public class TrackResourceParameters : BaseResourceParameters
     {
+        public string Name { get; set; }
     }
 }

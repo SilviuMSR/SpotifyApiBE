@@ -53,6 +53,8 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetArtists",
                         new
                         {
+                            orderBy = resourceParameters.OrderBy,
+                            searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber - 1,
                             pageSize = resourceParameters.PageSize
@@ -61,6 +63,8 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetArtists",
                         new
                         {
+                            orderBy = resourceParameters.OrderBy,
+                            searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber + 1,
                             pageSize = resourceParameters.PageSize
@@ -69,6 +73,8 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetArtists",
                         new
                         {
+                            orderBy = resourceParameters.OrderBy,
+                            searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber,
                             pageSize = resourceParameters.PageSize

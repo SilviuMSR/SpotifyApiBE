@@ -40,7 +40,23 @@ namespace SpotifyApi.Domain.Services
 
         public PagedList<Track> GetAllPaginationAsync(TrackResourceParameters resourceParams)
         {
-            var collectionBeforPaging = _context.Tracks.Include(a => a.Artists);
+            var collectionBeforPaging = _context.Tracks
+                .Include(a => a.Artists)
+                .AsQueryable();
+
+            //filter by name if exists
+            if(!string.IsNullOrEmpty(resourceParams.Name))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(t => t.Name == resourceParams.Name);
+            }
+
+            //searh if exists
+            if (!string.IsNullOrEmpty(resourceParams.SearchQuery))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(a => a.Name.Contains(resourceParams.SearchQuery));
+            }
 
             return PagedList<Track>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
         }

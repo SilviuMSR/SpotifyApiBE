@@ -68,6 +68,14 @@ namespace SpotifyApi.Domain.Services
             }
 
 
+            //searh if exists
+            if(!string.IsNullOrEmpty(resourceParams.SearchQuery))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(a => a.Name.Contains(resourceParams.SearchQuery)
+                    || a.Type.Contains(resourceParams.SearchQuery));
+            }
+
             return PagedList<Album>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
 
         }

@@ -41,6 +41,8 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistAlbums",
                         new
                         {
+                            orderBy = resourceParameters.OrderBy,
+                            searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             type = resourceParameters.Type,
                             pageNumber = resourceParameters.PageNumber - 1,
@@ -50,6 +52,8 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistAlbums",
                         new
                         {
+                            orderBy = resourceParameters.OrderBy,
+                            searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             type = resourceParameters.Type,
                             pageNumber = resourceParameters.PageNumber + 1,
@@ -59,6 +63,8 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistAlbums",
                         new
                         {
+                            orderBy = resourceParameters.OrderBy,
+                            searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             type = resourceParameters.Type,
                             pageNumber = resourceParameters.PageNumber,
