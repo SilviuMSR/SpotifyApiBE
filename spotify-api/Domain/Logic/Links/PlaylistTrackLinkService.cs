@@ -40,6 +40,7 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistTracks",
                         new
                         {
+                            name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber - 1,
                             pageSize = resourceParameters.PageSize
                         });
@@ -47,6 +48,7 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistTracks",
                         new
                         {
+                            name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber + 1,
                             pageSize = resourceParameters.PageSize
                         });
@@ -54,6 +56,7 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistTracks",
                         new
                         {
+                            name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber,
                             pageSize = resourceParameters.PageSize
                         });

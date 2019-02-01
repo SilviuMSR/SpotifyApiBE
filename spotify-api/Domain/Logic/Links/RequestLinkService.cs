@@ -41,6 +41,9 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetRequests",
                         new
                         {
+                            method = resourceParameters.Method,
+                            destination = resourceParameters.Destination,
+                            source = resourceParameters.Source,
                             pageNumber = resourceParameters.PageNumber - 1,
                             pageSize = resourceParameters.PageSize
                         });
@@ -48,6 +51,9 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetRequests",
                         new
                         {
+                            method = resourceParameters.Method,
+                            destination = resourceParameters.Destination,
+                            source = resourceParameters.Source,
                             pageNumber = resourceParameters.PageNumber + 1,
                             pageSize = resourceParameters.PageSize
                         });
@@ -55,6 +61,9 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetRequests",
                         new
                         {
+                            method = resourceParameters.Method,
+                            destination = resourceParameters.Destination,
+                            source = resourceParameters.Source,
                             pageNumber = resourceParameters.PageNumber,
                             pageSize = resourceParameters.PageSize
                         });
