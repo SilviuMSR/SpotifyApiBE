@@ -1,11 +1,10 @@
-﻿using SpotifyApi.Domain.Models;
+﻿using SpotifyApi.Domain.Dtos.ResourceParameters;
+using SpotifyApi.Domain.Models;
 using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Services
 {
-    public interface IAlbmRepo : IRepo<Album>
-
-
+    public interface IAlbmRepo : IRepo<Album, AlbumResourceParameters>
     {
         Task<Album> GetAlbumByNameAsync(string albumName);
     }

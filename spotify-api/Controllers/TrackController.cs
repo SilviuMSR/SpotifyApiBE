@@ -9,6 +9,7 @@ using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Logic.Links;
 using System.Collections.Generic;
 using System.Linq;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 
 namespace SpotifyApi.Controllers
 {
@@ -20,12 +21,12 @@ namespace SpotifyApi.Controllers
     {
         private readonly ITrackRepo _trackRepo;
         private readonly IMapper _mapper;
-        private readonly ILinkService<TrackDto> _linkService;
+        private readonly ILinkService<TrackDto, TrackResourceParameters> _linkService;
 
 
         public TrackController(ITrackRepo trackRepo, 
             IMapper mapper,
-            ILinkService<TrackDto> linkService)
+            ILinkService<TrackDto, TrackResourceParameters> linkService)
         {
             _trackRepo = trackRepo;
             _mapper = mapper;
@@ -34,11 +35,10 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpGet(Name = "GetTracks")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] TrackResourceParameters resourceParameters)
         {
             //Also must modify paginationAsync name since it is not async
-            var tracks = _trackRepo.GetAllPaginationAsync(resourceParameters.PageNumber,
-                resourceParameters.PageSize);
+            var tracks = _trackRepo.GetAllPaginationAsync(resourceParameters);
 
             var mappedTracks = _mapper.Map<IEnumerable<TrackDto>>(tracks);
 

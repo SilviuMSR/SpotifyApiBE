@@ -2,9 +2,11 @@
 
 namespace SpotifyApi.Domain.Logic.Links
 {
-    public interface ILinkService<T> where T : LinkedResourceBaseDto
+    public interface ILinkService<T, Resource> 
+        where T : LinkedResourceBaseDto
+        where Resource : BaseResourceParameters
     {
         T CreateLinks(T t);
-        string CreateResourceUri(ResourceParameters resourceParameters, ResourceType type);
+        string CreateResourceUri(Resource resourceParameters, ResourceType type);
     }
 }

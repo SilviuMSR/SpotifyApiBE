@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.Logic.Links;
 using SpotifyApi.Domain.Services;
 
@@ -16,12 +16,12 @@ namespace SpotifyApi.Controllers
     public class RequestController : ControllerBase
     {
         private readonly IRequestRepo _requestRepo;
-        private readonly ILinkService<RequestDto> _linkService;
+        private readonly ILinkService<RequestDto, RequestResourceParameters> _linkService;
         private readonly IMapper _mapper;
 
         public RequestController(
             IRequestRepo requestRepo,
-            ILinkService<RequestDto> linkService,
+            ILinkService<RequestDto, RequestResourceParameters> linkService,
             IMapper mapper)
         {
             _requestRepo = requestRepo;
@@ -32,11 +32,11 @@ namespace SpotifyApi.Controllers
 
         // GET: api/Request
         [HttpGet(Name = "GetRequests")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] RequestResourceParameters resourceParameters)
         {
 
             //task: add dto and links to previous next apges
-            var requests = _requestRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var requests = _requestRepo.GetAllPaginationAsync(resourceParameters);
 
             //map requests to requestsDto
             var mappedRequests = _mapper.Map<IEnumerable<RequestDto>>(requests);
@@ -73,7 +73,26 @@ namespace SpotifyApi.Controllers
             });
         }
 
+      /*  [HttpGet("filter/{ipAddress}", Name = "GetRequestsWithSameIp")]
+        public async Task<IActionResult> Get(string ipAddress)
+        {
+            //get the request by ip
+            var request = await _requestRepo.FilterRequestByLocation(ipAddress);
 
+            //map the requests to dto
+            var mappedRequests = _mapper.Map<IEnumerable<RequestDto>>(request);
+
+            //construct further links for every request
+            mappedRequests = mappedRequests.Select(r =>
+            {
+                r = _linkService.CreateLinks(r);
+
+                return r;
+            });
+
+            return Ok(mappedRequests);
+        }
+        */
         [HttpGet("{id}",Name = "GetRequestById")]
         public async Task<IActionResult> Get(int id)
         {
@@ -85,5 +104,6 @@ namespace SpotifyApi.Controllers
 
             return Ok(_linkService.CreateLinks(mappedRequest));
         }
+        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Logic.Links
 {
-    public class AlbumLinkService : ILinkService<AlbumDto>
+    public class AlbumLinkService : ILinkService<AlbumDto, AlbumResourceParameters>
     {
         private readonly IUrlHelper _urlHelper;
 
@@ -41,7 +42,7 @@ namespace SpotifyApi.Domain.Logic.Links
             return t;
         }
 
-        public string CreateResourceUri(ResourceParameters resourceParameters, ResourceType type)
+        public string CreateResourceUri(AlbumResourceParameters resourceParameters, ResourceType type)
         {
             switch (type)
             {
@@ -49,6 +50,7 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetAlbums",
                         new
                         {
+                            type = resourceParameters.Type,
                             pageNumber = resourceParameters.PageNumber - 1,
                             pageSize = resourceParameters.PageSize
                         });
@@ -56,6 +58,7 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetAlbums",
                         new
                         {
+                            type = resourceParameters.Type,
                             pageNumber = resourceParameters.PageNumber + 1,
                             pageSize = resourceParameters.PageSize
                         });
@@ -63,6 +66,7 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetAlbums",
                         new
                         {
+                            type = resourceParameters.Type,
                             pageNumber = resourceParameters.PageNumber,
                             pageSize = resourceParameters.PageSize
                         });

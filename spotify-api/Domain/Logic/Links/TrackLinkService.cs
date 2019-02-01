@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using System;
 
 namespace SpotifyApi.Domain.Logic.Links
 {
-    public class TrackLinkService : ILinkService<TrackDto>
+    public class TrackLinkService : ILinkService<TrackDto, TrackResourceParameters>
     {
         private readonly IUrlHelper _urlHelper;
 
@@ -41,7 +42,7 @@ namespace SpotifyApi.Domain.Logic.Links
             return track;
         }
 
-        public string CreateResourceUri(ResourceParameters resourceParameters,
+        public string CreateResourceUri(TrackResourceParameters resourceParameters,
                 ResourceType type)
         {
             switch (type)

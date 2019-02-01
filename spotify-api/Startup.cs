@@ -18,6 +18,7 @@ using SpotifyApi.Domain.Logic.Links;
 using SpotifyApi.Domain.Logic.Middleware;
 using SpotifyApi.Domain.Logic.AuxServicies.IAuxServicies;
 using SpotifyApi.Domain.Logic.AuxServicies;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 
 namespace SpotifyApi
 {
@@ -45,13 +46,13 @@ namespace SpotifyApi
             services.AddScoped<IRequestRepo, RequestRepo>();
 
             //configuring services for links in controllers
-            services.AddScoped<ILinkService<TrackDto>, TrackLinkService>();
-            services.AddScoped<ILinkService<AlbumDto>, AlbumLinkService>();
-            services.AddScoped<ILinkService<ArtistDto>, ArtistLinkService>();
-            services.AddScoped<ILinkService<PlaylistAlbumDto>, PlaylistAlbumLinkService>();
-            services.AddScoped<ILinkService<PlaylistArtistDto>, PlaylistArtistLinkService>();
-            services.AddScoped<ILinkService<PlaylistTrackDto>, PlaylistTrackLinkService>();
-            services.AddScoped<ILinkService<RequestDto>, RequestLinkService>();
+            services.AddScoped<ILinkService<TrackDto, TrackResourceParameters>, TrackLinkService>();
+            services.AddScoped<ILinkService<AlbumDto, AlbumResourceParameters>, AlbumLinkService>();
+            services.AddScoped<ILinkService<ArtistDto, ArtistResourceParameters>, ArtistLinkService>();
+            services.AddScoped<ILinkService<PlaylistAlbumDto, PlaylistAlbumResourceParameters>, PlaylistAlbumLinkService>();
+            services.AddScoped<ILinkService<PlaylistArtistDto, PlaylistArtistResourceParameters>, PlaylistArtistLinkService>();
+            services.AddScoped<ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters>, PlaylistTrackLinkService>();
+            services.AddScoped<ILinkService<RequestDto, RequestResourceParameters>, RequestLinkService>();
 
             //service for middleware user agent
             services.AddScoped<IAuxUserAgentService, SwaggerUiService>();

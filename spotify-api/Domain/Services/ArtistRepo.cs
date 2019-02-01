@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.Logic;
 using SpotifyApi.Domain.Models;
 using System;
@@ -35,11 +36,18 @@ namespace SpotifyApi.Domain.Services
             return _context.Artists.ToListAsync();
         }
 
-        public PagedList<Artist> GetAllPaginationAsync(int pageNumber, int pageSize)
+        public PagedList<Artist> GetAllPaginationAsync(ArtistResourceParameters resourceParams)
         {
-            var collectionBeforPaging = _context.Artists;
+            var collectionBeforPaging = _context.Artists.AsQueryable();
 
-            return PagedList<Artist>.Create(collectionBeforPaging, pageNumber, pageSize);
+            //if name filter exists
+            if (!string.IsNullOrEmpty(resourceParams.Name))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(a => a.Name == resourceParams.Name);
+            }
+
+            return PagedList<Artist>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
         public Task<Artist> GetByIdAsync(int id)

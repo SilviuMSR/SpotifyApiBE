@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.EntityModels;
 using SpotifyApi.Domain.Logic.Links;
 using SpotifyApi.Domain.Services;
@@ -23,11 +24,11 @@ namespace SpotifyApi.Controllers
 
         private readonly IPlaylistAlbumRepo _playlistAlbumRepo;
         private readonly IMapper _mapper;
-        private readonly ILinkService<PlaylistAlbumDto> _linkService;
+        private readonly ILinkService<PlaylistAlbumDto, PlaylistAlbumResourceParameters> _linkService;
 
         public PlaylistAlbumController(IPlaylistAlbumRepo playlistAlbumRepo, 
             IMapper mapper,
-            ILinkService<PlaylistAlbumDto> linkService)
+            ILinkService<PlaylistAlbumDto, PlaylistAlbumResourceParameters> linkService)
         {
             _playlistAlbumRepo = playlistAlbumRepo;
             _mapper = mapper;
@@ -35,9 +36,9 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpGet(Name = "GetPlaylistAlbums")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] PlaylistAlbumResourceParameters resourceParameters)
         {
-            var albums = _playlistAlbumRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var albums = _playlistAlbumRepo.GetAllPaginationAsync(resourceParameters);
 
             var mappedAlbums= _mapper.Map<IEnumerable<PlaylistAlbumDto>>(albums);
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.EntityModels;
 using SpotifyApi.Domain.Logic.Links;
 using SpotifyApi.Domain.Services;
@@ -21,11 +22,11 @@ namespace SpotifyApi.Controllers
     {
         private readonly IPlaylistTrackRepo _playlistTrackRepo;
         private readonly IMapper _mapper;
-        private readonly ILinkService<PlaylistTrackDto> _linkService;
+        private readonly ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> _linkService;
 
         public PlaylistTrackController(IPlaylistTrackRepo playlistTrackRepo,
             IMapper mapper,
-            ILinkService<PlaylistTrackDto> linkService)
+            ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> linkService)
         {
             _playlistTrackRepo = playlistTrackRepo;
             _mapper = mapper;
@@ -33,9 +34,9 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpGet(Name = "GetPlaylistTracks")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] PlaylistTrackResourceParameters resourceParameters)
         {
-            var tracks = _playlistTrackRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var tracks = _playlistTrackRepo.GetAllPaginationAsync(resourceParameters);
             var mappedTracks = _mapper.Map<IEnumerable<PlaylistTrackDto>>(tracks);
 
             //construct links to previus+next page

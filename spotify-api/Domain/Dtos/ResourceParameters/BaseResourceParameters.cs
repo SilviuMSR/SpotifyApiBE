@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Dtos
 {
-    public class ResourceParameters
+    public abstract class BaseResourceParameters
     {
         private const int maxPageSize = 20;
 

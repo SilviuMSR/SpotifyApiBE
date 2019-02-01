@@ -9,6 +9,7 @@ using SpotifyApi.Domain.Dtos;
 using System.Collections.Generic;
 using SpotifyApi.Domain.Logic.Links;
 using System.Linq;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 
 namespace SpotifyApi.Controllers
 {
@@ -21,11 +22,11 @@ namespace SpotifyApi.Controllers
     {
         private readonly IAlbmRepo _albumRepo;
         private readonly IMapper _mapper;
-        private readonly ILinkService<AlbumDto> _linkService;
+        private readonly ILinkService<AlbumDto, AlbumResourceParameters> _linkService;
 
         public AlbumController(IAlbmRepo albumRepo, 
             IMapper mapper,
-            ILinkService<AlbumDto> linkService)
+            ILinkService<AlbumDto, AlbumResourceParameters> linkService)
         {
             _albumRepo = albumRepo;
             _mapper = mapper;
@@ -34,9 +35,10 @@ namespace SpotifyApi.Controllers
 
 
         [HttpGet(Name = "GetAlbums")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] AlbumResourceParameters resourceParameters)
         {
-            var albums = _albumRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var a = _albumRepo;
+            var albums = _albumRepo.GetAllPaginationAsync(resourceParameters);
             var mappedAlbums = _mapper.Map<IEnumerable<AlbumDto>>(albums);
 
             //Construct links to previous+ next page

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Logic.Links
 {
-    public class PlaylistAlbumLinkService : ILinkService<PlaylistAlbumDto>
+    public class PlaylistAlbumLinkService : ILinkService<PlaylistAlbumDto, PlaylistAlbumResourceParameters>
     {
         private readonly IUrlHelper _urlHelper;
 
@@ -32,7 +33,7 @@ namespace SpotifyApi.Domain.Logic.Links
             return t;
         }
 
-        public string CreateResourceUri(ResourceParameters resourceParameters, ResourceType type)
+        public string CreateResourceUri(PlaylistAlbumResourceParameters resourceParameters, ResourceType type)
         {
             switch (type)
             {
