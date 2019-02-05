@@ -6,6 +6,7 @@ using SpotifyApi.Domain.Logic.AuxServicies.IAuxServicies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -25,9 +26,9 @@ namespace SpotifyApi.Domain.Logic.AuxServicies
 
         public async Task<UserAgent> ParseUserAgentData(string userAgentData)
         {
-
-            HttpClient httpClient = new HttpClient();
             var apiAddress = new Uri(SWAGGER_BASE_URL + "user_agent_parse");
+            HttpClient httpClient = new HttpClient();
+         
 
             //add x-api-key and client id for request
             httpClient.DefaultRequestHeaders.Add("x-api-key", _config.GetSection("AppSettings:SwaggerApiKey").Value);
@@ -37,24 +38,31 @@ namespace SpotifyApi.Domain.Logic.AuxServicies
 
             var content = new StringContent(jsonBody);
 
-            var response = await httpClient.PostAsync(apiAddress, content);
-
-            var c = await response.Content.ReadAsStringAsync();
+            var request = await httpClient.PostAsync(apiAddress, content);
+            
+            var c = await request.Content.ReadAsStringAsync();
 
             dynamic res = JsonConvert.DeserializeObject(c);
-            
 
-            //returning and constructing user agent from body
-            return new UserAgent {
-                UserAgentDescription = res.parse.user_agent,
-                SoftwareName = res.parse.software_name,
-                OperatingSystem = res.parse.operating_system,
-                SimpleSubDescription = res.parse.simple_sub_description_string,
-                OperatingSystemName = res.parse.operating_system_name,
-                OperatingSystemVersion = res.parse.operating_system_version,
-                SimpleSoftware = res.parse.simple_software_string,
-                Software = res.parse.software,
-            };
+            try
+            {
+                //returning and constructing user agent from body
+                return new UserAgent
+                {
+                    UserAgentDescription = res.parse.user_agent,
+                    SoftwareName = res.parse.software_name,
+                    OperatingSystem = res.parse.operating_system,
+                    SimpleSubDescription = res.parse.simple_sub_description_string,
+                    OperatingSystemName = res.parse.operating_system_name,
+                    OperatingSystemVersion = res.parse.operating_system_version,
+                    SimpleSoftware = res.parse.simple_software_string,
+                    Software = res.parse.software,
+                };
+            } catch(Exception e)
+            {
+                return null;
+            }
+            
         }
     }
 }

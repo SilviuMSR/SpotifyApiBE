@@ -2,16 +2,20 @@
 using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Dtos.ResourceParameters;
 using System;
+using System.Linq;
 
 namespace SpotifyApi.Domain.Logic.Links
 {
     public class TrackLinkService : ILinkService<TrackDto, TrackResourceParameters>
     {
         private readonly IUrlHelper _urlHelper;
+        private readonly ILinkService<ArtistDto, ArtistResourceParameters> _artistLinkService;
 
-        public TrackLinkService(IUrlHelper urlHelper)
+        public TrackLinkService(IUrlHelper urlHelper,
+            ILinkService<ArtistDto, ArtistResourceParameters> artistLinkService)
         {
             _urlHelper = urlHelper;
+            _artistLinkService = artistLinkService;
         }
 
         public TrackDto CreateLinks(TrackDto track)
@@ -38,6 +42,19 @@ namespace SpotifyApi.Domain.Logic.Links
              new { id = track.TrackId }),
              "update_self",
              "PUT"));
+
+
+            track.Links.Add(new Link(_urlHelper.Link("AddArtistToTrack",
+             new { id = track.TrackId }),
+             "add_artist_to_track",
+             "PATCH"));
+
+            track.Artists = track.Artists.Select(artist =>
+            {
+                artist = _artistLinkService.CreateLinks(artist);
+
+                return artist;
+            });
 
             return track;
         }

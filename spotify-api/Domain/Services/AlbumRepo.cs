@@ -21,27 +21,44 @@ namespace SpotifyApi.Domain.Services
         public void Add(Album t)
         {
             _context.Albums.Add(t);
-            _context.SaveChanges();
+        }
+
+        public async Task<Album> AddTrackToAlbum(int id, Track track)
+        {
+            //get album to add track
+            var album = await GetByIdAsync(id);
+
+            //now add track to album.tracks
+            if (album.Tracks == null)
+            {
+                album.Tracks = new List<Track>();
+            }
+
+            //Add track to album
+            album.Tracks.Add(track);
+
+            Update(id, album);
+
+            return album;
+
         }
 
         public void Delete(Album t)
         {
             _context.Albums.Remove(t);
-            _context.SaveChanges();
+
         }
 
         public async Task<Album> GetAlbumByNameAsync(string albumName)
         {
             var album = await _context.Albums.FirstOrDefaultAsync(a => a.Name == albumName);
 
-            await _context.SaveChangesAsync();
-
             return album;
         }
 
-        public Task<List<Album>> GetAllAsync()
+        public async Task<List<Album>> GetAllAsync()
         {
-            return _context.Albums
+            return await _context.Albums
                 .Include(t => t.Tracks)
                 .ToListAsync();
         }
@@ -80,14 +97,20 @@ namespace SpotifyApi.Domain.Services
 
         }
 
-        public Task<Album> GetByIdAsync(int id)
+        public async Task<Album> GetByIdAsync(int id)
         {
-            var album = _context.Albums.Include(t => t.Tracks).FirstOrDefaultAsync(a => a.AlbumId == id);
+            var album = await _context.Albums.Include(t => t.Tracks).FirstOrDefaultAsync(a => a.AlbumId == id);
 
             return album;
         }
 
-        public async void Update(int id, Album newAlbum)
+        public async Task<bool> SaveChangesAsync()
+        {
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
+        }
+
+        public void Update(int id, Album newAlbum)
         {
             var album = _context.Albums.Include(t => t.Tracks).FirstOrDefault(a => a.AlbumId == id);
 
@@ -97,9 +120,6 @@ namespace SpotifyApi.Domain.Services
             album.Tracks = newAlbum.Tracks;
 
             _context.Albums.Update(album);
-
-            _context.SaveChanges();
-
 
         }
     }

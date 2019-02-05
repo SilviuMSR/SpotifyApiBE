@@ -84,6 +84,8 @@ namespace SpotifyApi.Controllers
 
             _playlistAlbumRepo.Add(album);
 
+            await _playlistAlbumRepo.SaveChangesAsync();
+
             var mappedAlbum = _mapper.Map<PlaylistAlbumDto>(album);
 
             return Ok(_linkService.CreateLinks(mappedAlbum));

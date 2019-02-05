@@ -17,6 +17,7 @@ namespace SpotifyApi.Domain.Services
         Task<List<T>> GetAllAsync();
         PagedList<T> GetAllPaginationAsync(Resource resourceParameter);
         Task<T> GetByIdAsync(int id);
+        Task<bool> SaveChangesAsync();
         
     }
 }

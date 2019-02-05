@@ -22,18 +22,16 @@ namespace SpotifyApi.Domain.Services
         public void Add(Artist t)
         {
             _context.Artists.Add(t);
-            _context.SaveChanges();
         }
 
         public void Delete(Artist t)
         {
             _context.Artists.Remove(t);
-            _context.SaveChanges();
         }
 
-        public Task<List<Artist>> GetAllAsync()
+        public async Task<List<Artist>> GetAllAsync()
         {
-            return _context.Artists.ToListAsync();
+            return await _context.Artists.ToListAsync();
         }
 
         public PagedList<Artist> GetAllPaginationAsync(ArtistResourceParameters resourceParams)
@@ -57,11 +55,17 @@ namespace SpotifyApi.Domain.Services
             return PagedList<Artist>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
-        public Task<Artist> GetByIdAsync(int id)
+        public async Task<Artist> GetByIdAsync(int id)
         {
-            var artist = _context.Artists.FirstOrDefaultAsync(a => a.ArtistId == id);
+            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.ArtistId == id);
 
             return artist;
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
         }
 
         public void Update(int id, Artist newArtist)
@@ -73,8 +77,6 @@ namespace SpotifyApi.Domain.Services
             artist.Uri = newArtist.Uri;
 
             _context.Artists.Update(artist);
-
-            _context.SaveChanges();
 
         }
     }

@@ -73,26 +73,6 @@ namespace SpotifyApi.Controllers
             });
         }
 
-      /*  [HttpGet("filter/{ipAddress}", Name = "GetRequestsWithSameIp")]
-        public async Task<IActionResult> Get(string ipAddress)
-        {
-            //get the request by ip
-            var request = await _requestRepo.FilterRequestByLocation(ipAddress);
-
-            //map the requests to dto
-            var mappedRequests = _mapper.Map<IEnumerable<RequestDto>>(request);
-
-            //construct further links for every request
-            mappedRequests = mappedRequests.Select(r =>
-            {
-                r = _linkService.CreateLinks(r);
-
-                return r;
-            });
-
-            return Ok(mappedRequests);
-        }
-        */
         [HttpGet("{id}",Name = "GetRequestById")]
         public async Task<IActionResult> Get(int id)
         {

@@ -9,6 +9,6 @@ namespace SpotifyApi.Domain.Services
 {
     public interface ITrackRepo : IRepo<Track, TrackResourceParameters>
     {
-
+        Task<Track> AddArtistToTrack(int id, Artist artist);
     }
 }

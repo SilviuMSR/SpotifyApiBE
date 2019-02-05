@@ -22,18 +22,16 @@ namespace SpotifyApi.Domain.Services
         public void Add(PlaylistAlbum t)
         {
             _context.PlaylistAlbums.Add(t);
-            _context.SaveChanges();
         }
 
         public void Delete(PlaylistAlbum t)
         {
             _context.PlaylistAlbums.Remove(t);
-            _context.SaveChanges();
         }
 
-        public Task<List<PlaylistAlbum>> GetAllAsync()
+        public async Task<List<PlaylistAlbum>> GetAllAsync()
         {
-            return _context.PlaylistAlbums
+            return await _context.PlaylistAlbums
                 .Include(t => t.Tracks)
                 .ToListAsync();
         }
@@ -69,11 +67,17 @@ namespace SpotifyApi.Domain.Services
             return PagedList<PlaylistAlbum>.Create(collectionBeforePaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
-        public Task<PlaylistAlbum> GetByIdAsync(int id)
+        public async Task<PlaylistAlbum> GetByIdAsync(int id)
         {
-            var album = _context.PlaylistAlbums.Include(t => t.Tracks).FirstOrDefaultAsync(a => a.PlaylistAlbumId == id);
+            var album = await _context.PlaylistAlbums.Include(t => t.Tracks).FirstOrDefaultAsync(a => a.PlaylistAlbumId == id);
 
             return album;
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
         }
 
         public void Update(int id, PlaylistAlbum t)
@@ -89,8 +93,6 @@ namespace SpotifyApi.Domain.Services
             playlistAlbum.Type = t.Type;
 
             _context.PlaylistAlbums.Update(playlistAlbum);
-
-            _context.SaveChanges();
 
         }
     }

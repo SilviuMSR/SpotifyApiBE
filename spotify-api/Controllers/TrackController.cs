@@ -100,6 +100,8 @@ namespace SpotifyApi.Controllers
 
             _trackRepo.Add(track);
 
+            await _trackRepo.SaveChangesAsync();
+
             var mappedTrack = _mapper.Map<TrackDto>(track);
 
             return Ok(_linkService.CreateLinks(mappedTrack));
@@ -117,6 +119,8 @@ namespace SpotifyApi.Controllers
             var mappedTrack = _mapper.Map<Track>(trackDto);
 
             _trackRepo.Update(id, mappedTrack);
+
+            await _trackRepo.SaveChangesAsync();
 
             var newTrack = await _trackRepo.GetByIdAsync(id);
 
@@ -137,9 +141,29 @@ namespace SpotifyApi.Controllers
 
             _trackRepo.Delete(track);
 
+            await _trackRepo.SaveChangesAsync();
+
             var mappedTrack = _mapper.Map<TrackDto>(track);
             
 
+            return Ok(_linkService.CreateLinks(mappedTrack));
+        }
+
+        [HttpPatch("{id}/artist", Name = "AddArtistToTrack")]
+        public async Task<IActionResult> AddArtistToTrack(int id, [FromBody] ArtistDto artistDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var artist = _mapper.Map<Artist>(artistDto);
+
+            var track = await _trackRepo.AddArtistToTrack(id, artist);
+            await _trackRepo.SaveChangesAsync();
+
+            var mappedTrack = _mapper.Map<TrackDto>(track);
+            
             return Ok(_linkService.CreateLinks(mappedTrack));
         }
     }

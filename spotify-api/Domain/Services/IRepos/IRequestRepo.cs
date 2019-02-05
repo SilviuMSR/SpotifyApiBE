@@ -10,6 +10,6 @@ namespace SpotifyApi.Domain.Services
 {
     public interface IRequestRepo : IRepo<Request, RequestResourceParameters>
     {
-        Task<List<Request>> FilterRequestByLocation(string ip);
+
     }
 }

@@ -11,10 +11,13 @@ namespace SpotifyApi.Domain.Logic.Links
     public class PlaylistAlbumLinkService : ILinkService<PlaylistAlbumDto, PlaylistAlbumResourceParameters>
     {
         private readonly IUrlHelper _urlHelper;
+        private readonly ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> _trackLinkService;
 
-        public PlaylistAlbumLinkService(IUrlHelper urlHelper)
+        public PlaylistAlbumLinkService(IUrlHelper urlHelper,
+            ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> trackLinkService)
         {
             _urlHelper = urlHelper;
+            _trackLinkService = trackLinkService;
         }
 
         public PlaylistAlbumDto CreateLinks(PlaylistAlbumDto t)
@@ -29,6 +32,13 @@ namespace SpotifyApi.Domain.Logic.Links
               new { }),
               "post_playlistAlbum",
               "POST"));
+
+            t.Tracks = t.Tracks.Select(track => 
+            {
+                track = _trackLinkService.CreateLinks(track);
+
+                return track;
+            });
 
             return t;
         }

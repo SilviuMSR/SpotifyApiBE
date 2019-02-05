@@ -22,18 +22,16 @@ namespace SpotifyApi.Domain.Services
         public void Add(PlaylistTrack t)
         {
             _context.PlaylistTracks.Add(t);
-            _context.SaveChanges();
         }
 
         public void Delete(PlaylistTrack t)
         {
             _context.PlaylistTracks.Remove(t);
-            _context.SaveChanges();
         }
 
-        public Task<List<PlaylistTrack>> GetAllAsync()
+        public async Task<List<PlaylistTrack>> GetAllAsync()
         {
-            return _context.PlaylistTracks.ToListAsync();
+            return await _context.PlaylistTracks.ToListAsync();
         }
 
         public PagedList<PlaylistTrack> GetAllPaginationAsync(PlaylistTrackResourceParameters resourceParams)
@@ -59,11 +57,17 @@ namespace SpotifyApi.Domain.Services
             return PagedList<PlaylistTrack>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
-        public Task<PlaylistTrack> GetByIdAsync(int id)
+        public async Task<PlaylistTrack> GetByIdAsync(int id)
         {
-            var track = _context.PlaylistTracks.FirstOrDefaultAsync(tr => tr.PlaylistTrackId == id);
+            var track = await _context.PlaylistTracks.FirstOrDefaultAsync(tr => tr.PlaylistTrackId == id);
 
             return track;
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
         }
 
         public void Update(int id, PlaylistTrack t)
@@ -76,8 +80,6 @@ namespace SpotifyApi.Domain.Services
             playlistTrack.PreviewUrl = t.PreviewUrl;
             
             _context.PlaylistTracks.Update(playlistTrack);
-
-            _context.SaveChanges();
         }
     }
 }

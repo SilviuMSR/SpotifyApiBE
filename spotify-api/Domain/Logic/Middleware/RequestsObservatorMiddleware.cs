@@ -28,6 +28,7 @@ namespace SpotifyApi.Domain.Logic.Middleware
             StringValues user_agent = "";
             context.Request.Headers.TryGetValue("User-Agent", out user_agent);
 
+
             //waiting for user agent
             var result = await userAgentService.ParseUserAgentData(user_agent.ToString());
  
@@ -39,7 +40,6 @@ namespace SpotifyApi.Domain.Logic.Middleware
                 Method = context.Request.Method,
                 UserAgent = result,
             });
-
 
             //calling next to go to next middleware
             await _next(context);

@@ -22,18 +22,30 @@ namespace SpotifyApi.Domain.Services
         public void Add(Track t)
         {
             _context.Add(t);
-            _context.SaveChanges();
+        }
+
+        public async Task<Track> AddArtistToTrack(int id, Artist artist)
+        {
+            var t = await GetByIdAsync(id);
+
+            if (t.Artists == null)
+            {
+                t.Artists = new List<Artist>();
+            }
+
+            t.Artists.Add(artist);
+
+            return t;
         }
 
         public void Delete(Track t)
         {
             _context.Remove(t);
-            _context.SaveChanges();
         }
 
-        public Task<List<Track>> GetAllAsync()
+        public async Task<List<Track>> GetAllAsync()
         {
-            return _context.Tracks
+            return await _context.Tracks
                 .Include(p => p.Artists)
                 .ToListAsync();
         }
@@ -61,11 +73,17 @@ namespace SpotifyApi.Domain.Services
             return PagedList<Track>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
-        public Task<Track> GetByIdAsync(int id)
+        public async Task<Track> GetByIdAsync(int id)
         {
-            return _context.Tracks
+            return await _context.Tracks
                 .Include(a => a.Artists)
                 .FirstOrDefaultAsync(t => t.TrackId == id);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
         }
 
         public void Update(int id, Track newTrack)
@@ -78,8 +96,6 @@ namespace SpotifyApi.Domain.Services
             track.Href = newTrack.Href;
 
             _context.Tracks.Update(track);
-
-            _context.SaveChanges();
         }
     }
 }

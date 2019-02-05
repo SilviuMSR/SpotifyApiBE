@@ -83,6 +83,8 @@ namespace SpotifyApi.Controllers
 
             _artistRepo.Add(artist);
 
+            await _artistRepo.SaveChangesAsync();
+
             var mappedArtist = _mapper.Map<ArtistDto>(artist);
 
             return Ok(_linkService.CreateLinks(mappedArtist));
@@ -120,6 +122,8 @@ namespace SpotifyApi.Controllers
 
             _artistRepo.Delete(artist);
 
+            await _artistRepo.SaveChangesAsync();
+
             var mappedArtist = _mapper.Map<ArtistDto>(artist);
 
             return Ok(_linkService.CreateLinks(mappedArtist));
@@ -135,6 +139,8 @@ namespace SpotifyApi.Controllers
             var mappedArtist = _mapper.Map<Artist>(artistDto);
 
             _artistRepo.Update(id, mappedArtist);
+
+            await _artistRepo.SaveChangesAsync();
 
             var updatedArtist = await _artistRepo.GetByIdAsync(id);
 

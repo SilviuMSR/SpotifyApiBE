@@ -20,27 +20,16 @@ namespace SpotifyApi.Domain.Services
         public void Add(Request t)
         {
             _context.Requests.Add(t);
-            _context.SaveChanges();
         }
 
         public void Delete(Request t)
         {
             _context.Remove(t);
-            _context.SaveChanges();
         }
 
-        public Task<List<Request>> FilterRequestByLocation(string ip)
+        public async Task<List<Request>> GetAllAsync()
         {
-            return _context.Requests
-                .Include(request => request.UserAgent)
-                .Where(request => request.Source == ip)
-                .OrderBy(request => request.Method)
-                .ToListAsync();
-        }
-
-        public Task<List<Request>> GetAllAsync()
-        {
-            return _context.Requests
+            return await _context.Requests
                 .Include(request => request.UserAgent)
                 .ToListAsync();
         }
@@ -84,11 +73,17 @@ namespace SpotifyApi.Domain.Services
             return PagedList<Request>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
-        public Task<Request> GetByIdAsync(int id)
+        public async Task<Request> GetByIdAsync(int id)
         {
-            return _context.Requests
+            return await _context.Requests
                 .Include(request => request.UserAgent)
                 .FirstOrDefaultAsync(request => request.RequestId == id);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
         }
 
         public void Update(int id, Request t)
@@ -98,8 +93,6 @@ namespace SpotifyApi.Domain.Services
                 .FirstOrDefault(r => r.RequestId == id);
             
             _context.Requests.Update(request);
-
-            _context.SaveChanges();
         }
     }
 }
