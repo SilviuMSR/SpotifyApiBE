@@ -15,6 +15,7 @@ using AutoMapper;
 using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Logic;
 using SpotifyApi.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SpotifyApi.Controllers
 {
@@ -60,6 +61,11 @@ namespace SpotifyApi.Controllers
             if(result.Succeeded)
             {
 
+                //uncoment the section to add admins manually
+                /*//add user role to user
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "User"));
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Admin")); */
+
                 var mappedUserToDto = _mapper.Map<UserToReturnDto>(user);
 
                 return Ok(new
@@ -81,6 +87,34 @@ namespace SpotifyApi.Controllers
             
             if(result.Succeeded)
             {
+                return StatusCode(201);
+            }
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpPost("admin", Name = "CreateAdmin")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] UserForRegisterDto userDto)
+        {
+            var user = _mapper.Map<User>(userDto);
+
+            var result = await _userManager.CreateAsync(user, userDto.Password);
+
+            if (result.Succeeded)
+            {
+                //get user by name
+                var adminUser = await _userManager.FindByNameAsync(user.UserName);
+
+                //if user not found throw exception
+                if (adminUser == null)
+                {
+                    throw new NullReferenceException("Failed to create admin user");
+                }
+
+                //add admin role to user
+                await _userManager.AddClaimAsync(adminUser, new Claim(ClaimTypes.Role, "Admin"));
+
                 return StatusCode(201);
             }
 

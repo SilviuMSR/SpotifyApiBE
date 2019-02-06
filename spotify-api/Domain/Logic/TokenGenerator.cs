@@ -23,16 +23,14 @@ namespace SpotifyApi.Domain.Logic
 
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
-            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
-            claims.Add(new Claim(ClaimTypes.Role, "User"));
 
-            //get all roles for a user
-            var roles = await userManager.GetRolesAsync(user);
-            
+            //get all user role claims
+            var userRoles = await userManager.GetClaimsAsync(user);
+
             //add roles to claims
-            foreach (var role in roles)
+            foreach (var roleClaim in userRoles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(roleClaim);
             }
 
 

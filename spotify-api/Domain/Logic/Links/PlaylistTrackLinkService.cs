@@ -29,6 +29,12 @@ namespace SpotifyApi.Domain.Logic.Links
               "post_playlistTrack",
               "POST"));
 
+            t.Links.Add(new Link(_urlHelper.Link("DeletePlaylistTrack",
+             new { id = t.PlaylistTrackId }),
+             "delete_playlistTrack",
+             "DELETE"));
+
+
             return t;
         }
 

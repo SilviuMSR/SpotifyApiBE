@@ -91,6 +91,27 @@ namespace SpotifyApi.Controllers
             return Ok(_linkService.CreateLinks(mappedAlbum));
         }
 
+        [HttpDelete("{id}", Name = "DeletePlaylistAlbum")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            //get the album
+            var album = await _playlistAlbumRepo.GetByIdAsync(id);
+
+            if (album == null)
+            {
+                return BadRequest("Album with {id} not found");
+            }
+
+            //delete the album
+            _playlistAlbumRepo.Delete(album);
+
+            //save changes async
+            await _playlistAlbumRepo.SaveChangesAsync();
+
+            
+            return StatusCode(204);
+        }
+
 
     }
 }

@@ -20,14 +20,20 @@ namespace SpotifyApi.Domain.Logic.Links
         public PlaylistArtistDto CreateLinks(PlaylistArtistDto t)
         {
             t.Links.Add(new Link(_urlHelper.Link("GetPlaylistArtists",
-             new { }),
-            "get_all",
-            "GET"));
+              new { }),
+              "get_all",
+              "GET"));
 
             t.Links.Add(new Link(_urlHelper.Link("CreatePlaylistArtist",
               new { }),
               "post_playlistArtist",
               "POST"));
+
+            t.Links.Add(new Link(_urlHelper.Link("DeletePlaylistArtist",
+              new { id = t.PlaylistArtistId }),
+              "delete_playlistArtist",
+              "DELETE"));
+
 
             return t;
         }
