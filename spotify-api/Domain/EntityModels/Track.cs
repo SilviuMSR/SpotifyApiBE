@@ -10,10 +10,14 @@ namespace SpotifyApi.Domain.Models
     {
         public int TrackId { get; set; }
 
+        [Required]
+        [StringLength(100)]
         public string Name { get; set; }
 
+        [StringLength(100)]
         public string Href { get; set; }
 
+        [StringLength(100)]
         public string PreviewUrl { get; set; }
 
         public ICollection<Artist> Artists { get; set; }

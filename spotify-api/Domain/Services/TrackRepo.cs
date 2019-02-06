@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.Logic;
 using SpotifyApi.Domain.Models;
 using System;
@@ -20,39 +22,73 @@ namespace SpotifyApi.Domain.Services
         public void Add(Track t)
         {
             _context.Add(t);
-            _context.SaveChanges();
+        }
+
+        public async Task<Track> AddArtistToTrack(int id, Artist artist)
+        {
+            var t = await GetByIdAsync(id);
+
+            if (t.Artists == null)
+            {
+                t.Artists = new List<Artist>();
+            }
+
+            t.Artists.Add(artist);
+
+            return t;
         }
 
         public void Delete(Track t)
         {
             _context.Remove(t);
-            _context.SaveChanges();
         }
 
-        public Task<List<Track>> GetAllAsync()
+        public async Task<List<Track>> GetAllAsync()
         {
-            return _context.Tracks
+            return await _context.Tracks
                 .Include(p => p.Artists)
                 .ToListAsync();
         }
 
-        public PagedList<Track> GetAllPaginationAsync(int pageNumber, int pageSize)
+        public PagedList<Track> GetAllPaginationAsync(TrackResourceParameters resourceParams)
         {
-            var collectionBeforPaging = _context.Tracks.Include(a => a.Artists);
+            var collectionBeforPaging = _context.Tracks
+                .Include(a => a.Artists)
+                .AsQueryable();
 
-            return PagedList<Track>.Create(collectionBeforPaging, pageNumber, pageSize);
+            //filter by name if exists
+            if(!string.IsNullOrEmpty(resourceParams.Name))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(t => t.Name == resourceParams.Name);
+            }
+
+            //searh if exists
+            if (!string.IsNullOrEmpty(resourceParams.SearchQuery))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(a => a.Name.Contains(resourceParams.SearchQuery));
+            }
+
+            return PagedList<Track>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
-        public Task<Track> GetByIdAsync(int id)
+        public async Task<Track> GetByIdAsync(int id)
         {
-            return _context.Tracks
+            return await _context.Tracks
                 .Include(a => a.Artists)
                 .FirstOrDefaultAsync(t => t.TrackId == id);
         }
 
-        public async void Update(int id, Track newTrack)
+        public async Task<bool> SaveChangesAsync()
         {
-            var track = await _context.Tracks.FirstOrDefaultAsync(t => t.TrackId == id);
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
+        }
+
+        public void Update(int id, Track newTrack)
+        {
+            var track = _context.Tracks.FirstOrDefault(t => t.TrackId == id);
 
             track.Artists = newTrack.Artists;
             track.Name = newTrack.Name;
@@ -60,8 +96,6 @@ namespace SpotifyApi.Domain.Services
             track.Href = newTrack.Href;
 
             _context.Tracks.Update(track);
-
-            await _context.SaveChangesAsync();
         }
     }
 }

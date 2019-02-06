@@ -5,8 +5,12 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Dtos
 {
-    public class ResourceParameters
+    public abstract class BaseResourceParameters
     {
+        public string SearchQuery { get; set; }
+
+        public string OrderBy { get; set; }
+
         private const int maxPageSize = 20;
 
         public int PageNumber { get; set; } = 1;

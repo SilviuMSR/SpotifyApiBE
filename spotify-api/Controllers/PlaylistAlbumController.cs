@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.EntityModels;
 using SpotifyApi.Domain.Logic.Links;
 using SpotifyApi.Domain.Services;
@@ -21,13 +22,13 @@ namespace SpotifyApi.Controllers
     public class PlaylistAlbumController : ControllerBase
     {
 
-        private readonly IPlaylistAlbum _playlistAlbumRepo;
+        private readonly IPlaylistAlbumRepo _playlistAlbumRepo;
         private readonly IMapper _mapper;
-        private readonly ILinkService<PlaylistAlbumDto> _linkService;
+        private readonly ILinkService<PlaylistAlbumDto, PlaylistAlbumResourceParameters> _linkService;
 
-        public PlaylistAlbumController(IPlaylistAlbum playlistAlbumRepo, 
+        public PlaylistAlbumController(IPlaylistAlbumRepo playlistAlbumRepo, 
             IMapper mapper,
-            ILinkService<PlaylistAlbumDto> linkService)
+            ILinkService<PlaylistAlbumDto, PlaylistAlbumResourceParameters> linkService)
         {
             _playlistAlbumRepo = playlistAlbumRepo;
             _mapper = mapper;
@@ -35,9 +36,9 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpGet(Name = "GetPlaylistAlbums")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] PlaylistAlbumResourceParameters resourceParameters)
         {
-            var albums = _playlistAlbumRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var albums = _playlistAlbumRepo.GetAllPaginationAsync(resourceParameters);
 
             var mappedAlbums= _mapper.Map<IEnumerable<PlaylistAlbumDto>>(albums);
 
@@ -64,26 +65,26 @@ namespace SpotifyApi.Controllers
                 nextPageLink = nextPage
             };
 
-            mappedAlbums = mappedAlbums.Select(track =>
+            return Ok(new
             {
-                track = _linkService.CreateLinks(track);
-                return track;
+                Values = mappedAlbums,
+                Links = paginationMetadata
             });
-
-            Response.Headers.Add("X-Pagination",
-                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
-
-
-
-            return Ok(mappedAlbums);
         }
 
         [HttpPost(Name = "CreatePlaylistAlbum")]
         public async Task<IActionResult> Post([FromBody] PlaylistAlbumDto albumDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var album = _mapper.Map<PlaylistAlbum>(albumDto);
 
             _playlistAlbumRepo.Add(album);
+
+            await _playlistAlbumRepo.SaveChangesAsync();
 
             var mappedAlbum = _mapper.Map<PlaylistAlbumDto>(album);
 

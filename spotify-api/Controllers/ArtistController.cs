@@ -9,6 +9,7 @@ using AutoMapper;
 using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Logic.Links;
 using System.Linq;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 
 namespace SpotifyApi.Controllers
 {
@@ -21,12 +22,12 @@ namespace SpotifyApi.Controllers
     {
         private readonly IArtistRepo _artistRepo;
         private readonly IMapper _mapper;
-        private readonly ILinkService<ArtistDto> _linkService;
+        private readonly ILinkService<ArtistDto, ArtistResourceParameters> _linkService;
 
  
         public ArtistController(IArtistRepo artistRepo,
             IMapper mapper,
-            ILinkService<ArtistDto> linkService)
+            ILinkService<ArtistDto, ArtistResourceParameters> linkService)
         {
             _artistRepo = artistRepo;
             _mapper = mapper;
@@ -35,9 +36,9 @@ namespace SpotifyApi.Controllers
 
         // GET: api/Artists
         [HttpGet(Name = "GetArtists")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] ArtistResourceParameters resourceParameters)
         {
-            var artists = _artistRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var artists = _artistRepo.GetAllPaginationAsync(resourceParameters);
             var mappedArtists = _mapper.Map<IEnumerable<ArtistDto>>(artists);
 
             //constructing links to previus next page
@@ -62,21 +63,27 @@ namespace SpotifyApi.Controllers
                 artist = _linkService.CreateLinks(artist);
                 return artist;
             });
-
-            Response.Headers.Add("X-Pagination",
-                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
-
-
-            return Ok(mappedArtists);
+            
+            return Ok(new {
+                Values = mappedArtists,
+                Links = paginationMetadata
+            });
         }
 
         // POST: api/Artists
         [HttpPost(Name = "CreateArtists")]
         public async Task<IActionResult> Post([FromBody] ArtistDto artistDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var artist = _mapper.Map<Artist>(artistDto);
 
             _artistRepo.Add(artist);
+
+            await _artistRepo.SaveChangesAsync();
 
             var mappedArtist = _mapper.Map<ArtistDto>(artist);
 
@@ -115,6 +122,8 @@ namespace SpotifyApi.Controllers
 
             _artistRepo.Delete(artist);
 
+            await _artistRepo.SaveChangesAsync();
+
             var mappedArtist = _mapper.Map<ArtistDto>(artist);
 
             return Ok(_linkService.CreateLinks(mappedArtist));
@@ -130,6 +139,8 @@ namespace SpotifyApi.Controllers
             var mappedArtist = _mapper.Map<Artist>(artistDto);
 
             _artistRepo.Update(id, mappedArtist);
+
+            await _artistRepo.SaveChangesAsync();
 
             var updatedArtist = await _artistRepo.GetByIdAsync(id);
 

@@ -9,6 +9,7 @@ using SpotifyApi.Domain.Dtos;
 using System.Collections.Generic;
 using SpotifyApi.Domain.Logic.Links;
 using System.Linq;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 
 namespace SpotifyApi.Controllers
 {
@@ -21,35 +22,37 @@ namespace SpotifyApi.Controllers
     {
         private readonly IAlbmRepo _albumRepo;
         private readonly IMapper _mapper;
-        private readonly ILinkService<AlbumDto> _linkService;
-
+        private readonly ILinkService<AlbumDto, AlbumResourceParameters> _albumLinkService;
+    
 
         public AlbumController(IAlbmRepo albumRepo, 
             IMapper mapper,
-            ILinkService<AlbumDto> linkService)
+            ILinkService<AlbumDto, AlbumResourceParameters> albumLinkService)
         {
             _albumRepo = albumRepo;
             _mapper = mapper;
-            _linkService = linkService;
+            _albumLinkService = albumLinkService;
         }
 
 
         [HttpGet(Name = "GetAlbums")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] AlbumResourceParameters resourceParameters)
         {
-            var albums = _albumRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var a = _albumRepo;
+            var albums = _albumRepo.GetAllPaginationAsync(resourceParameters);
             var mappedAlbums = _mapper.Map<IEnumerable<AlbumDto>>(albums);
 
             //Construct links to previous+ next page
             var previousPage = albums.HasPrevious ?
-                _linkService.CreateResourceUri(resourceParameters, ResourceType.PreviousPage) : null;
+                _albumLinkService.CreateResourceUri(resourceParameters, ResourceType.PreviousPage) : null;
 
             var nextPage = albums.HasNext ?
-                _linkService.CreateResourceUri(resourceParameters, ResourceType.NextPage) : null;
+                _albumLinkService.CreateResourceUri(resourceParameters, ResourceType.NextPage) : null;
 
             mappedAlbums = mappedAlbums.Select(album =>
             {
-                album = _linkService.CreateLinks(album);
+                album = _albumLinkService.CreateLinks(album);
+
                 return album;
             });
 
@@ -65,8 +68,8 @@ namespace SpotifyApi.Controllers
 
             return Ok(new
             {
-                values = mappedAlbums,
-                links = paginationMetadata
+                Values = mappedAlbums,
+                Links = paginationMetadata
             });
         }
 
@@ -82,20 +85,27 @@ namespace SpotifyApi.Controllers
 
             var mappedAlbum = _mapper.Map<AlbumDto>(album);
 
-            return Ok(_linkService.CreateLinks(mappedAlbum));
+            return Ok(_albumLinkService.CreateLinks(mappedAlbum));
         }
 
         [HttpPost(Name = "CreateAlbum")]
         public async Task<IActionResult> Post([FromBody] AlbumDto albumDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             //mapping dto to entity
             var album = _mapper.Map<Album>(albumDto);
 
             _albumRepo.Add(album);
 
+            await _albumRepo.SaveChangesAsync();
+
             var mappedAlbum = _mapper.Map<AlbumDto>(album);
             
-            return Ok(_linkService.CreateLinks(mappedAlbum));
+            return Ok(_albumLinkService.CreateLinks(mappedAlbum));
         }
 
         [HttpDelete("{id}", Name = "DeleteAlbum")]
@@ -110,24 +120,54 @@ namespace SpotifyApi.Controllers
 
             _albumRepo.Delete(album);
 
+            await _albumRepo.SaveChangesAsync();
+
             var mappedAlbum = _mapper.Map<AlbumDto>(album);
 
-            return Ok(_linkService.CreateLinks(mappedAlbum));
+            return Ok(_albumLinkService.CreateLinks(mappedAlbum));
         }
 
 
         [HttpPut("{id}", Name = "UpdateAlbum")]
         public async Task<IActionResult> Update(int id, [FromBody] AlbumDto albumDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var album = _mapper.Map<Album>(albumDto);
             
             _albumRepo.Update(id, album);
+
+            await _albumRepo.SaveChangesAsync();
 
             var updatedAlbum = await _albumRepo.GetByIdAsync(id);
 
             var mappedUpdatedAlbum = _mapper.Map<AlbumDto>(updatedAlbum);
 
-            return Ok(_linkService.CreateLinks(mappedUpdatedAlbum));
+            return Ok(_albumLinkService.CreateLinks(mappedUpdatedAlbum));
+        }
+
+        [HttpPatch("{id}/track", Name = "AddTrackToAlbum")]
+        public async Task<IActionResult> AddTrack(int id, [FromBody] TrackDto trackDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var track = _mapper.Map<Track>(trackDto);
+
+            await _albumRepo.AddTrackToAlbum(id, track);
+
+            await _albumRepo.SaveChangesAsync();
+
+            var album = await _albumRepo.GetByIdAsync(id);
+
+            var mappedAlbum = _mapper.Map<AlbumDto>(album);
+
+            return Ok(_albumLinkService.CreateLinks(mappedAlbum));
         }
 
     }

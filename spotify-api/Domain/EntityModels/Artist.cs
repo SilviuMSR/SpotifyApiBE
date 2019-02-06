@@ -10,10 +10,14 @@ namespace SpotifyApi.Domain.Models
     {
         public int ArtistId { get; set; }
 
+        [Required]
+        [StringLength(100)]
         public string Name { get; set; }
 
+        [StringLength(100)]
         public string Uri { get; set; }
 
+        [StringLength(100)]
         public string ImgUri { get; set; }
 
     }

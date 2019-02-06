@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.EntityModels;
 using SpotifyApi.Domain.Logic.Links;
 using SpotifyApi.Domain.Services;
@@ -19,22 +20,23 @@ namespace SpotifyApi.Controllers
     [ApiController]
     public class PlaylistTrackController : ControllerBase
     {
-        private readonly IPlaylistTrack _playlistTrackRepo;
+        private readonly IPlaylistTrackRepo _playlistTrackRepo;
         private readonly IMapper _mapper;
-        private readonly ILinkService<PlaylistTrackDto> _linkService;
+        private readonly ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> _linkService;
 
-        public PlaylistTrackController(IPlaylistTrack playlistTrackRepo,
+        public PlaylistTrackController(IPlaylistTrackRepo playlistTrackRepo,
             IMapper mapper,
-            ILinkService<PlaylistTrackDto> linkService)
+            ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> linkService)
         {
             _playlistTrackRepo = playlistTrackRepo;
             _mapper = mapper;
+            _linkService = linkService;
         }
 
         [HttpGet(Name = "GetPlaylistTracks")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] PlaylistTrackResourceParameters resourceParameters)
         {
-            var tracks = _playlistTrackRepo.GetAllPaginationAsync(resourceParameters.PageNumber, resourceParameters.PageSize);
+            var tracks = _playlistTrackRepo.GetAllPaginationAsync(resourceParameters);
             var mappedTracks = _mapper.Map<IEnumerable<PlaylistTrackDto>>(tracks);
 
             //construct links to previus+next page
@@ -60,18 +62,26 @@ namespace SpotifyApi.Controllers
                 nextPageLink = nextPage
             };
 
-            Response.Headers.Add("X-Pagination",
-                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
-
-            return Ok(mappedTracks);
+            return Ok(new
+            {
+                Values = mappedTracks,
+                Links = paginationMetadata
+            });
         }
 
         [HttpPost(Name = "CreatePlaylistTrack")]
         public async Task<IActionResult> Post([FromBody] PlaylistTrackDto trackDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var track = _mapper.Map<PlaylistTrack>(trackDto);
 
             _playlistTrackRepo.Add(track);
+
+            await _playlistTrackRepo.SaveChangesAsync();
 
             var mappedTrack = _mapper.Map<PlaylistTrackDto>(track);
 

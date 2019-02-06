@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,16 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Logic.Links
 {
-    public class PlaylistAlbumLinkService : ILinkService<PlaylistAlbumDto>
+    public class PlaylistAlbumLinkService : ILinkService<PlaylistAlbumDto, PlaylistAlbumResourceParameters>
     {
         private readonly IUrlHelper _urlHelper;
+        private readonly ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> _trackLinkService;
 
-        public PlaylistAlbumLinkService(IUrlHelper urlHelper)
+        public PlaylistAlbumLinkService(IUrlHelper urlHelper,
+            ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> trackLinkService)
         {
             _urlHelper = urlHelper;
+            _trackLinkService = trackLinkService;
         }
 
         public PlaylistAlbumDto CreateLinks(PlaylistAlbumDto t)
@@ -29,10 +33,17 @@ namespace SpotifyApi.Domain.Logic.Links
               "post_playlistAlbum",
               "POST"));
 
+            t.Tracks = t.Tracks.Select(track => 
+            {
+                track = _trackLinkService.CreateLinks(track);
+
+                return track;
+            });
+
             return t;
         }
 
-        public string CreateResourceUri(ResourceParameters resourceParameters, ResourceType type)
+        public string CreateResourceUri(PlaylistAlbumResourceParameters resourceParameters, ResourceType type)
         {
             switch (type)
             {
@@ -40,6 +51,10 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistAlbums",
                         new
                         {
+                            orderBy = resourceParameters.OrderBy,
+                            searchQuery = resourceParameters.SearchQuery,
+                            name = resourceParameters.Name,
+                            type = resourceParameters.Type,
                             pageNumber = resourceParameters.PageNumber - 1,
                             pageSize = resourceParameters.PageSize
                         });
@@ -47,6 +62,10 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistAlbums",
                         new
                         {
+                            orderBy = resourceParameters.OrderBy,
+                            searchQuery = resourceParameters.SearchQuery,
+                            name = resourceParameters.Name,
+                            type = resourceParameters.Type,
                             pageNumber = resourceParameters.PageNumber + 1,
                             pageSize = resourceParameters.PageSize
                         });
@@ -54,6 +73,10 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistAlbums",
                         new
                         {
+                            orderBy = resourceParameters.OrderBy,
+                            searchQuery = resourceParameters.SearchQuery,
+                            name = resourceParameters.Name,
+                            type = resourceParameters.Type,
                             pageNumber = resourceParameters.PageNumber,
                             pageSize = resourceParameters.PageSize
                         });

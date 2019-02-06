@@ -15,6 +15,11 @@ using SpotifyApi.Domain.Dtos;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SpotifyApi.Domain.Logic.Links;
+using SpotifyApi.Domain.Logic.Middleware;
+using SpotifyApi.Domain.Logic.AuxServicies.IAuxServicies;
+using SpotifyApi.Domain.Logic.AuxServicies;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace SpotifyApi
 {
@@ -36,17 +41,22 @@ namespace SpotifyApi
             services.AddScoped<IAlbmRepo,AlbumRepo>();
             services.AddScoped<IArtistRepo, ArtistRepo>();
             services.AddScoped<ITrackRepo, TrackRepo>();
-            services.AddScoped<IPlaylistAlbum, PlaylistAlbumRepo>();
+            services.AddScoped<IPlaylistAlbumRepo, PlaylistAlbumRepo>();
             services.AddScoped<IPlaylistArtist, PlaylistArtistRepo>();
-            services.AddScoped<IPlaylistTrack, PlaylistTrackRepo>();
+            services.AddScoped<IPlaylistTrackRepo, PlaylistTrackRepo>();
+            services.AddScoped<IRequestRepo, RequestRepo>();
 
             //configuring services for links in controllers
-            services.AddScoped<ILinkService<TrackDto>, TrackLinkService>();
-            services.AddScoped<ILinkService<AlbumDto>, AlbumLinkService>();
-            services.AddScoped<ILinkService<ArtistDto>, ArtistLinkService>();
-            services.AddScoped<ILinkService<PlaylistAlbumDto>, PlaylistAlbumLinkService>();
-            services.AddScoped<ILinkService<PlaylistArtistDto>, PlaylistArtistLinkService>();
-            services.AddScoped<ILinkService<PlaylistTrackDto>, PlaylistTrackLinkService>();
+            services.AddScoped<ILinkService<TrackDto, TrackResourceParameters>, TrackLinkService>();
+            services.AddScoped<ILinkService<AlbumDto, AlbumResourceParameters>, AlbumLinkService>();
+            services.AddScoped<ILinkService<ArtistDto, ArtistResourceParameters>, ArtistLinkService>();
+            services.AddScoped<ILinkService<PlaylistAlbumDto, PlaylistAlbumResourceParameters>, PlaylistAlbumLinkService>();
+            services.AddScoped<ILinkService<PlaylistArtistDto, PlaylistArtistResourceParameters>, PlaylistArtistLinkService>();
+            services.AddScoped<ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters>, PlaylistTrackLinkService>();
+            services.AddScoped<ILinkService<RequestDto, RequestResourceParameters>, RequestLinkService>();
+
+            //service for middleware user agent
+            services.AddScoped<IAuxUserAgentService, SwaggerUiService>();
 
             //for constructing links
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -60,7 +70,8 @@ namespace SpotifyApi
        
             services.AddCors();
 
-            services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(opt =>
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             //configure authorization
             IdentityBuilder builder = services.AddIdentityCore<User>(opt => 
             {
@@ -88,17 +99,6 @@ namespace SpotifyApi
                     });
             //end of identity configuration
 
-            services.AddMvc(options =>
-                {
-
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(opt =>
-                {
-                    opt.SerializerSettings.ReferenceLoopHandling = 
-                        Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                });
-
             //configuring Automapper
             var config = new AutoMapper.MapperConfiguration(c =>
             {   
@@ -111,7 +111,38 @@ namespace SpotifyApi
             //now add the mapper as a service, unique, global per application scope
             services.AddSingleton(mapper);
 
+            //add service for documentation using swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = "SB Spotify Api :)",
+                    Version = "v1"
+                });
+            });
 
+
+            //add headers for cache
+            services.AddHttpCacheHeaders(
+                (expirationModelOptions) 
+                =>
+                { expirationModelOptions.MaxAge = 600; },
+                (validationModelOptions) 
+                =>
+                { validationModelOptions.MustRevalidate = true; });
+
+            services.AddResponseCaching();
+
+            services.AddMvc(options =>
+            {
+
+            })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(opt =>
+                {
+                    opt.SerializerSettings.ReferenceLoopHandling =
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -126,12 +157,29 @@ namespace SpotifyApi
                 app.UseHsts();
             }
 
-            app.UseCors(builder => 
+            app.UseCors(builder =>
                 builder.AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod());
 
+            //import it to serve generated swagger as JSON
+            app.UseSwagger();
+
+            //enable middleware to generate swagger-ui 
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SB Spotify Api");
+                c.RoutePrefix = string.Empty;
+            });
+
+        //    app.UseMiddleware<RequestsObservatorMiddleware>();
+
             app.UseAuthentication();
+
+            app.UseResponseCaching();
+
+            app.UseHttpCacheHeaders();
+            
             app.UseMvc();
         }
     }

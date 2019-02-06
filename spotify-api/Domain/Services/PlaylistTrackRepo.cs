@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.EntityModels;
 using SpotifyApi.Domain.Logic;
 
 namespace SpotifyApi.Domain.Services
 {
-    public class PlaylistTrackRepo : IPlaylistTrack
+    public class PlaylistTrackRepo : IPlaylistTrackRepo
     {
 
         private readonly DataContext _context;
@@ -21,37 +22,57 @@ namespace SpotifyApi.Domain.Services
         public void Add(PlaylistTrack t)
         {
             _context.PlaylistTracks.Add(t);
-            _context.SaveChanges();
         }
 
-        public async void Delete(PlaylistTrack t)
+        public void Delete(PlaylistTrack t)
         {
             _context.PlaylistTracks.Remove(t);
-            await _context.SaveChangesAsync();
         }
 
-        public Task<List<PlaylistTrack>> GetAllAsync()
+        public async Task<List<PlaylistTrack>> GetAllAsync()
         {
-            return _context.PlaylistTracks.ToListAsync();
+            return await _context.PlaylistTracks.ToListAsync();
         }
 
-        public PagedList<PlaylistTrack> GetAllPaginationAsync(int pageNumber, int pageSize)
+        public PagedList<PlaylistTrack> GetAllPaginationAsync(PlaylistTrackResourceParameters resourceParams)
         {
-            var collectionBeforPaging = _context.PlaylistTracks;
+            var collectionBeforPaging = _context.PlaylistTracks
+                .AsQueryable();
 
-            return PagedList<PlaylistTrack>.Create(collectionBeforPaging, pageNumber, pageSize);
+            //filter by name if name =||=
+            if (!string.IsNullOrEmpty(resourceParams.Name))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(a => a.Name == resourceParams.Name);
+            }
+
+            //searh if exists
+            if (!string.IsNullOrEmpty(resourceParams.SearchQuery))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(a => a.Name.Contains(resourceParams.SearchQuery));
+            }
+
+
+            return PagedList<PlaylistTrack>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
-        public Task<PlaylistTrack> GetByIdAsync(int id)
+        public async Task<PlaylistTrack> GetByIdAsync(int id)
         {
-            var track = _context.PlaylistTracks.FirstOrDefaultAsync(tr => tr.PlaylistTrackId == id);
+            var track = await _context.PlaylistTracks.FirstOrDefaultAsync(tr => tr.PlaylistTrackId == id);
 
             return track;
         }
 
-        public async void Update(int id, PlaylistTrack t)
+        public async Task<bool> SaveChangesAsync()
         {
-            var playlistTrack = await _context.PlaylistTracks.FirstOrDefaultAsync(a => a.PlaylistTrackId == id);
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
+        }
+
+        public void Update(int id, PlaylistTrack t)
+        {
+            var playlistTrack = _context.PlaylistTracks.FirstOrDefault(a => a.PlaylistTrackId == id);
 
             playlistTrack.Name = t.Name;
             playlistTrack.PlaylistTrackId = t.PlaylistTrackId;
@@ -59,8 +80,6 @@ namespace SpotifyApi.Domain.Services
             playlistTrack.PreviewUrl = t.PreviewUrl;
             
             _context.PlaylistTracks.Update(playlistTrack);
-
-            await _context.SaveChangesAsync();
         }
     }
 }

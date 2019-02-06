@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.Logic;
 using SpotifyApi.Domain.Models;
 using System;
@@ -21,45 +22,61 @@ namespace SpotifyApi.Domain.Services
         public void Add(Artist t)
         {
             _context.Artists.Add(t);
-            _context.SaveChanges();
         }
 
         public void Delete(Artist t)
         {
             _context.Artists.Remove(t);
-            _context.SaveChanges();
         }
 
-        public Task<List<Artist>> GetAllAsync()
+        public async Task<List<Artist>> GetAllAsync()
         {
-            return _context.Artists.ToListAsync();
+            return await _context.Artists.ToListAsync();
         }
 
-        public PagedList<Artist> GetAllPaginationAsync(int pageNumber, int pageSize)
+        public PagedList<Artist> GetAllPaginationAsync(ArtistResourceParameters resourceParams)
         {
-            var collectionBeforPaging = _context.Artists;
+            var collectionBeforPaging = _context.Artists.AsQueryable();
 
-            return PagedList<Artist>.Create(collectionBeforPaging, pageNumber, pageSize);
+            //if name filter exists
+            if (!string.IsNullOrEmpty(resourceParams.Name))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(a => a.Name == resourceParams.Name);
+            }
+
+            //searh if exists
+            if (!string.IsNullOrEmpty(resourceParams.SearchQuery))
+            {
+                collectionBeforPaging = collectionBeforPaging
+                    .Where(a => a.Name.Contains(resourceParams.SearchQuery));
+            }
+
+            return PagedList<Artist>.Create(collectionBeforPaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
-        public Task<Artist> GetByIdAsync(int id)
+        public async Task<Artist> GetByIdAsync(int id)
         {
-            var artist = _context.Artists.FirstOrDefaultAsync(a => a.ArtistId == id);
+            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.ArtistId == id);
 
             return artist;
         }
 
-        public async  void Update(int id, Artist newArtist)
+        public async Task<bool> SaveChangesAsync()
         {
-            var artist = await _context.Artists.FirstOrDefaultAsync(a => a.ArtistId == id);
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
+        }
+
+        public void Update(int id, Artist newArtist)
+        {
+            var artist = _context.Artists.FirstOrDefault(a => a.ArtistId == id);
             
             artist.ImgUri = newArtist.ImgUri;
             artist.Name = newArtist.Name;
             artist.Uri = newArtist.Uri;
 
             _context.Artists.Update(artist);
-
-            await _context.SaveChangesAsync();
 
         }
     }

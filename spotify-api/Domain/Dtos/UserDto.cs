@@ -11,10 +11,14 @@ namespace SpotifyApi.Domain.Dtos
         public int Id { get; set; }
 
         [Required]
+        [StringLength(100)]
         public string UserName { get; set; }
 
+        [EmailAddress]
+        [StringLength(100)]
         public string Email { get; set; }
 
+        [StringLength(100)]
         public string Country { get; set; }
 
         [Required]

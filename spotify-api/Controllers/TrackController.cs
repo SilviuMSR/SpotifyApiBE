@@ -9,6 +9,7 @@ using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Logic.Links;
 using System.Collections.Generic;
 using System.Linq;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 
 namespace SpotifyApi.Controllers
 {
@@ -20,12 +21,12 @@ namespace SpotifyApi.Controllers
     {
         private readonly ITrackRepo _trackRepo;
         private readonly IMapper _mapper;
-        private readonly ILinkService<TrackDto> _linkService;
+        private readonly ILinkService<TrackDto, TrackResourceParameters> _linkService;
 
 
         public TrackController(ITrackRepo trackRepo, 
             IMapper mapper,
-            ILinkService<TrackDto> linkService)
+            ILinkService<TrackDto, TrackResourceParameters> linkService)
         {
             _trackRepo = trackRepo;
             _mapper = mapper;
@@ -34,11 +35,10 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpGet(Name = "GetTracks")]
-        public async Task<IActionResult> Get([FromQuery] ResourceParameters resourceParameters)
+        public async Task<IActionResult> Get([FromQuery] TrackResourceParameters resourceParameters)
         {
             //Also must modify paginationAsync name since it is not async
-            var tracks = _trackRepo.GetAllPaginationAsync(resourceParameters.PageNumber,
-                resourceParameters.PageSize);
+            var tracks = _trackRepo.GetAllPaginationAsync(resourceParameters);
 
             var mappedTracks = _mapper.Map<IEnumerable<TrackDto>>(tracks);
 
@@ -66,14 +66,12 @@ namespace SpotifyApi.Controllers
                 nextPageLink = nextPage
             };
 
-            Response.Headers.Add("X-Pagination",
-                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
-
-            return Ok(mappedTracks);
+            return Ok(new
+            {
+                Values = mappedTracks,
+                Links = paginationMetadata
+            });
         }
-
-        //this part must be refactored and added to another folder
-
 
         [HttpGet("{id}", Name = "GetTrackById")]
         public async Task<IActionResult> Get(int id)
@@ -93,9 +91,16 @@ namespace SpotifyApi.Controllers
         [HttpPost(Name = "CreateTrack")]
         public async Task<IActionResult> Post([FromBody] TrackDto trackDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var track = _mapper.Map<Track>(trackDto);
 
             _trackRepo.Add(track);
+
+            await _trackRepo.SaveChangesAsync();
 
             var mappedTrack = _mapper.Map<TrackDto>(track);
 
@@ -106,9 +111,16 @@ namespace SpotifyApi.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] TrackDto trackDto)
         {
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var mappedTrack = _mapper.Map<Track>(trackDto);
 
             _trackRepo.Update(id, mappedTrack);
+
+            await _trackRepo.SaveChangesAsync();
 
             var newTrack = await _trackRepo.GetByIdAsync(id);
 
@@ -129,9 +141,29 @@ namespace SpotifyApi.Controllers
 
             _trackRepo.Delete(track);
 
+            await _trackRepo.SaveChangesAsync();
+
             var mappedTrack = _mapper.Map<TrackDto>(track);
             
 
+            return Ok(_linkService.CreateLinks(mappedTrack));
+        }
+
+        [HttpPatch("{id}/artist", Name = "AddArtistToTrack")]
+        public async Task<IActionResult> AddArtistToTrack(int id, [FromBody] ArtistDto artistDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var artist = _mapper.Map<Artist>(artistDto);
+
+            var track = await _trackRepo.AddArtistToTrack(id, artist);
+            await _trackRepo.SaveChangesAsync();
+
+            var mappedTrack = _mapper.Map<TrackDto>(track);
+            
             return Ok(_linkService.CreateLinks(mappedTrack));
         }
     }

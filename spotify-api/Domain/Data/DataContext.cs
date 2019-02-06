@@ -23,10 +23,11 @@ namespace SpotifyApi.Domain.Services
         public DbSet<Track> Tracks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Album> Albums { get; set; }
-
+        public DbSet<Request> Requests { get; set; }
         public DbSet<PlaylistAlbum> PlaylistAlbums { get; set; }
         public DbSet<PlaylistArtist> PlaylistArtists { get; set; }
         public DbSet<PlaylistTrack> PlaylistTracks { get; set; }
+        public DbSet<UserAgent> UserAgents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -46,8 +47,6 @@ namespace SpotifyApi.Domain.Services
                 .HasForeignKey(ur => ur.UserId)
                 .IsRequired();
             });
-
-
         }
     }
 }

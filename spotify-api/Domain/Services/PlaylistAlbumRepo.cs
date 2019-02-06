@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.EntityModels;
 using SpotifyApi.Domain.Logic;
 
 namespace SpotifyApi.Domain.Services
 {
-    public class PlaylistAlbumRepo : IPlaylistAlbum
+    public class PlaylistAlbumRepo : IPlaylistAlbumRepo
     {
 
         private readonly DataContext _context;
@@ -21,39 +22,69 @@ namespace SpotifyApi.Domain.Services
         public void Add(PlaylistAlbum t)
         {
             _context.PlaylistAlbums.Add(t);
-            _context.SaveChanges();
         }
 
         public void Delete(PlaylistAlbum t)
         {
             _context.PlaylistAlbums.Remove(t);
-            _context.SaveChanges();
         }
 
-        public Task<List<PlaylistAlbum>> GetAllAsync()
+        public async Task<List<PlaylistAlbum>> GetAllAsync()
         {
-            return _context.PlaylistAlbums
+            return await _context.PlaylistAlbums
                 .Include(t => t.Tracks)
                 .ToListAsync();
         }
 
-        public PagedList<PlaylistAlbum> GetAllPaginationAsync(int pageNumber, int pageSize)
+        public PagedList<PlaylistAlbum> GetAllPaginationAsync(PlaylistAlbumResourceParameters resourceParams)
         {
-            var collectionBeforePaging = _context.PlaylistAlbums.Include(t => t.Tracks);
-            
-            return PagedList<PlaylistAlbum>.Create(collectionBeforePaging, pageNumber, pageSize);
+            var collectionBeforePaging = _context.PlaylistAlbums
+                .Include(t => t.Tracks)
+                .AsQueryable();
+
+            //filter by type if type exists
+            if (!string.IsNullOrEmpty(resourceParams.Type))
+            {
+                collectionBeforePaging = collectionBeforePaging
+                    .Where(a => a.Type == resourceParams.Type);
+            }
+
+            //filter by name if name =||=
+            if (!string.IsNullOrEmpty(resourceParams.Name))
+            {
+                collectionBeforePaging = collectionBeforePaging
+                    .Where(a => a.Name == resourceParams.Name);
+            }
+
+            //searh if exists
+            if (!string.IsNullOrEmpty(resourceParams.SearchQuery))
+            {
+                collectionBeforePaging = collectionBeforePaging
+                    .Where(a => a.Name.Contains(resourceParams.SearchQuery)
+                    || a.Type.Contains(resourceParams.SearchQuery));
+            }
+
+            return PagedList<PlaylistAlbum>.Create(collectionBeforePaging, resourceParams.PageNumber, resourceParams.PageSize);
         }
 
-        public Task<PlaylistAlbum> GetByIdAsync(int id)
+        public async Task<PlaylistAlbum> GetByIdAsync(int id)
         {
-            var album = _context.PlaylistAlbums.Include(t => t.Tracks).FirstOrDefaultAsync(a => a.PlaylistAlbumId == id);
+            var album = await _context.PlaylistAlbums.Include(t => t.Tracks).FirstOrDefaultAsync(a => a.PlaylistAlbumId == id);
 
             return album;
         }
 
-        public async void Update(int id, PlaylistAlbum t)
+        public async Task<bool> SaveChangesAsync()
         {
-            var playlistAlbum = await _context.PlaylistAlbums.Include(track => track.Tracks).FirstOrDefaultAsync(a => a.PlaylistAlbumId == id);
+            //returntrue if 1 or more entities were changed
+            return (await _context.SaveChangesAsync() > 0);
+        }
+
+        public void Update(int id, PlaylistAlbum t)
+        {
+            var playlistAlbum = _context.PlaylistAlbums
+                .Include(track => track.Tracks)
+                .FirstOrDefault(a => a.PlaylistAlbumId == id);
 
             playlistAlbum.ImgUri = t.ImgUri;
             playlistAlbum.Name = t.Name;
@@ -62,8 +93,6 @@ namespace SpotifyApi.Domain.Services
             playlistAlbum.Type = t.Type;
 
             _context.PlaylistAlbums.Update(playlistAlbum);
-
-            await _context.SaveChangesAsync();
 
         }
     }

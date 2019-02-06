@@ -148,6 +148,56 @@ namespace SpotifyApi.Migrations
                     b.ToTable("PlaylistTracks");
                 });
 
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.Request", b =>
+                {
+                    b.Property<int>("RequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<string>("Destination");
+
+                    b.Property<string>("Method");
+
+                    b.Property<string>("Source");
+
+                    b.Property<int?>("UserAgentId");
+
+                    b.HasKey("RequestId");
+
+                    b.HasIndex("UserAgentId");
+
+                    b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.UserAgent", b =>
+                {
+                    b.Property<int>("UserAgentId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("OperatingSystem");
+
+                    b.Property<string>("OperatingSystemName");
+
+                    b.Property<string>("OperatingSystemVersion");
+
+                    b.Property<string>("SimpleSoftware");
+
+                    b.Property<string>("SimpleSubDescription");
+
+                    b.Property<string>("Software");
+
+                    b.Property<string>("SoftwareName");
+
+                    b.Property<string>("UserAgentDescription");
+
+                    b.HasKey("UserAgentId");
+
+                    b.ToTable("UserAgents");
+                });
+
             modelBuilder.Entity("SpotifyApi.Domain.Models.Album", b =>
                 {
                     b.Property<int>("AlbumId")
@@ -344,6 +394,13 @@ namespace SpotifyApi.Migrations
                     b.HasOne("SpotifyApi.Domain.EntityModels.PlaylistArtist")
                         .WithMany("Tracks")
                         .HasForeignKey("PlaylistArtistId");
+                });
+
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.Request", b =>
+                {
+                    b.HasOne("SpotifyApi.Domain.EntityModels.UserAgent", "UserAgent")
+                        .WithMany()
+                        .HasForeignKey("UserAgentId");
                 });
 
             modelBuilder.Entity("SpotifyApi.Domain.Models.Artist", b =>
