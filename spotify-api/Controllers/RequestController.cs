@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Dtos.ResourceParameters;
@@ -11,6 +13,9 @@ using SpotifyApi.Domain.Services;
 
 namespace SpotifyApi.Controllers
 {
+    [Authorize(AuthenticationSchemes =
+        JwtBearerDefaults.AuthenticationScheme,
+        Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class RequestController : ControllerBase

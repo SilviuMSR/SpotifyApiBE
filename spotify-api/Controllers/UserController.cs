@@ -16,6 +16,8 @@ using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Logic;
 using SpotifyApi.Domain;
 using Microsoft.AspNetCore.Authorization;
+using SpotifyApi.Domain.Dtos.ResourceParameters;
+using SpotifyApi.Domain.Logic.Links;
 
 namespace SpotifyApi.Controllers
 {
@@ -32,8 +34,7 @@ namespace SpotifyApi.Controllers
         public UserController(IConfiguration config,
             UserManager<User> userManager, 
             SignInManager<User> signInManager,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -41,7 +42,7 @@ namespace SpotifyApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("login")]
+        [HttpPost("login", Name = "LoginUser")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userDto)
         {
             if (!ModelState.IsValid)
@@ -67,18 +68,19 @@ namespace SpotifyApi.Controllers
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Admin")); */
 
                 var mappedUserToDto = _mapper.Map<UserToReturnDto>(user);
+                var userForLinks = _mapper.Map<UserDto>(user);
 
                 return Ok(new
                 {
                     token = await TokenGenerator.GenerateJwtToken(user, _mapper, _config, _userManager),
-                    user = mappedUserToDto
+                    user = mappedUserToDto,           
                 });
             }
 
             return Unauthorized();
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateUser")]
         public async Task<IActionResult> Register([FromBody] UserForRegisterDto userDto)
         {
             var user = _mapper.Map<User>(userDto);
