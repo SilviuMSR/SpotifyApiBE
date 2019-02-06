@@ -39,6 +39,15 @@ namespace SpotifyApi.Domain.Dtos
 
             CreateMap<Request, RequestDto>()
                 .ReverseMap();
+
+            CreateMap<User, UserToReturnDto>()
+                .ReverseMap();
+            
+            CreateMap<User, UserForLoginDto>()
+                .ReverseMap();
+
+            CreateMap<User, UserForRegisterDto>()
+                .ReverseMap();
         }
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using AutoMapper;
 using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Logic;
+using SpotifyApi.Domain;
 
 namespace SpotifyApi.Controllers
 {
@@ -40,32 +41,31 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserDto userDto)
+        public async Task<IActionResult> Login([FromBody] UserForLoginDto userDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var user = _mapper.Map<User>(userDto);
+            var user = await _userManager.FindByNameAsync(userDto.UserName);
 
-            var usr = await _userManager.FindByNameAsync(user.UserName);
-
-            if(usr == null)
+            if(user == null)
             {
                 return Unauthorized();
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(usr, user.Password, false);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, userDto.Password, false);
 
             if(result.Succeeded)
             {
 
-                var mappedUserToDto = _mapper.Map<UserDto>(user);
+                var mappedUserToDto = _mapper.Map<UserToReturnDto>(user);
 
                 return Ok(new
                 {
-                    token = TokenGenerator.GenerateJwtToken(usr, _mapper, _config)
+                    token = TokenGenerator.GenerateJwtToken(user, _mapper, _config),
+                    user = mappedUserToDto
                 });
             }
 
@@ -73,11 +73,11 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] UserDto userDto)
+        public async Task<IActionResult> Register([FromBody] UserForRegisterDto userDto)
         {
             var user = _mapper.Map<User>(userDto);
             
-            var result = await _userManager.CreateAsync(user, user.Password);
+            var result = await _userManager.CreateAsync(user, userDto.Password);
             
             if(result.Succeeded)
             {
