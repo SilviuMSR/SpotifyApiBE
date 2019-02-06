@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SpotifyApi.Domain.Dtos;
@@ -16,16 +17,24 @@ namespace SpotifyApi.Domain.Logic
     public class TokenGenerator
     {
 
-        public static string GenerateJwtToken(User user, IMapper mapper, IConfiguration config)
+        public static async Task<string> GenerateJwtToken(User user, IMapper mapper, IConfiguration config, UserManager<User> userManager)
         {
+            var claims = new List<Claim>();
 
-            var mappedUser = mapper.Map<UserDto>(user);
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+            claims.Add(new Claim(ClaimTypes.Name, user.UserName));
+            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+            claims.Add(new Claim(ClaimTypes.Role, "User"));
 
-            var claims = new[]
+            //get all roles for a user
+            var roles = await userManager.GetRolesAsync(user);
+            
+            //add roles to claims
+            foreach (var role in roles)
             {
-                new Claim(ClaimTypes.NameIdentifier, mappedUser.Id.ToString()),
-                new Claim(ClaimTypes.Name, mappedUser.UserName)
-            };
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("AppSettings:Token").Value));
 

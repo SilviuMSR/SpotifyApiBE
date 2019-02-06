@@ -64,7 +64,7 @@ namespace SpotifyApi.Controllers
 
                 return Ok(new
                 {
-                    token = TokenGenerator.GenerateJwtToken(user, _mapper, _config),
+                    token = await TokenGenerator.GenerateJwtToken(user, _mapper, _config, _userManager),
                     user = mappedUserToDto
                 });
             }
