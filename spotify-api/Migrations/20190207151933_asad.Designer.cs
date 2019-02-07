@@ -10,8 +10,8 @@ using SpotifyApi.Domain.Services;
 namespace SpotifyApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190123101329_asasdss")]
-    partial class asasdss
+    [Migration("20190207151933_asad")]
+    partial class asad
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -91,17 +91,148 @@ namespace SpotifyApi.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.PlaylistAlbum", b =>
+                {
+                    b.Property<int>("PlaylistAlbumId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImgUri")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(50);
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("PlaylistAlbumId");
+
+                    b.ToTable("PlaylistAlbums");
+                });
+
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.PlaylistArtist", b =>
+                {
+                    b.Property<int>("PlaylistArtistId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImgUri")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Uri")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("PlaylistArtistId");
+
+                    b.ToTable("PlaylistArtists");
+                });
+
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.PlaylistTrack", b =>
+                {
+                    b.Property<int>("PlaylistTrackId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Href")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<int?>("PlaylistAlbumId");
+
+                    b.Property<int?>("PlaylistArtistId");
+
+                    b.Property<string>("PreviewUrl")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("PlaylistTrackId");
+
+                    b.HasIndex("PlaylistAlbumId");
+
+                    b.HasIndex("PlaylistArtistId");
+
+                    b.ToTable("PlaylistTracks");
+                });
+
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.Request", b =>
+                {
+                    b.Property<int>("RequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<string>("Destination");
+
+                    b.Property<string>("Method");
+
+                    b.Property<string>("Source");
+
+                    b.Property<int?>("UserAgentId");
+
+                    b.HasKey("RequestId");
+
+                    b.HasIndex("UserAgentId");
+
+                    b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.UserAgent", b =>
+                {
+                    b.Property<int>("UserAgentId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("OperatingSystem");
+
+                    b.Property<string>("OperatingSystemName");
+
+                    b.Property<string>("OperatingSystemVersion");
+
+                    b.Property<string>("SimpleSoftware");
+
+                    b.Property<string>("SimpleSubDescription");
+
+                    b.Property<string>("Software");
+
+                    b.Property<string>("SoftwareName");
+
+                    b.Property<string>("UserAgentDescription");
+
+                    b.HasKey("UserAgentId");
+
+                    b.ToTable("UserAgents");
+                });
+
             modelBuilder.Entity("SpotifyApi.Domain.Models.Album", b =>
                 {
                     b.Property<int>("AlbumId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImgUri");
+                    b.Property<string>("ImgUri")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .HasMaxLength(50);
 
                     b.HasKey("AlbumId");
 
@@ -114,13 +245,17 @@ namespace SpotifyApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImgUri");
+                    b.Property<string>("ImgUri")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<int?>("TrackId");
 
-                    b.Property<string>("Uri");
+                    b.Property<string>("Uri")
+                        .HasMaxLength(100);
 
                     b.HasKey("ArtistId");
 
@@ -177,11 +312,15 @@ namespace SpotifyApi.Migrations
 
                     b.Property<int?>("AlbumId");
 
-                    b.Property<string>("Href");
+                    b.Property<string>("Href")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
-                    b.Property<string>("PreviewUrl");
+                    b.Property<string>("PreviewUrl")
+                        .HasMaxLength(100);
 
                     b.HasKey("TrackId");
 
@@ -206,7 +345,8 @@ namespace SpotifyApi.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("Href");
+                    b.Property<string>("Href")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -218,7 +358,8 @@ namespace SpotifyApi.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
 
-                    b.Property<string>("Password");
+                    b.Property<string>("Password")
+                        .IsRequired();
 
                     b.Property<string>("PasswordHash");
 
@@ -278,6 +419,24 @@ namespace SpotifyApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.PlaylistTrack", b =>
+                {
+                    b.HasOne("SpotifyApi.Domain.EntityModels.PlaylistAlbum")
+                        .WithMany("Tracks")
+                        .HasForeignKey("PlaylistAlbumId");
+
+                    b.HasOne("SpotifyApi.Domain.EntityModels.PlaylistArtist")
+                        .WithMany("Tracks")
+                        .HasForeignKey("PlaylistArtistId");
+                });
+
+            modelBuilder.Entity("SpotifyApi.Domain.EntityModels.Request", b =>
+                {
+                    b.HasOne("SpotifyApi.Domain.EntityModels.UserAgent", "UserAgent")
+                        .WithMany()
+                        .HasForeignKey("UserAgentId");
+                });
+
             modelBuilder.Entity("SpotifyApi.Domain.Models.Artist", b =>
                 {
                     b.HasOne("SpotifyApi.Domain.Models.Track")
@@ -298,7 +457,7 @@ namespace SpotifyApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SpotifyApi.Domain.Models.User", "User")
-                        .WithMany("UserRoles")
+                        .WithMany()
                         .HasForeignKey("UserId1");
                 });
 

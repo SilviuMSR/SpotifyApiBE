@@ -72,7 +72,7 @@ namespace SpotifyApi.Controllers
 
         // POST: api/Artists
         [HttpPost(Name = "CreateArtists")]
-        public async Task<IActionResult> Post([FromBody] ArtistDto artistDto)
+        public async Task<IActionResult> Post([FromBody] ArtistToCreateDto artistDto)
         {
             if (!ModelState.IsValid)
             {
@@ -133,7 +133,7 @@ namespace SpotifyApi.Controllers
 
         //update a specific artist
         [HttpPut("{id}", Name = "UpdateArtist")]
-        public async Task<IActionResult> Update(int id, [FromBody] ArtistDto artistDto)
+        public async Task<IActionResult> Update(int id, [FromBody] ArtistToCreateDto artistDto)
         {
 
             var mappedArtist = _mapper.Map<Artist>(artistDto);

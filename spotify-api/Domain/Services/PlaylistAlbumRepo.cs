@@ -42,6 +42,13 @@ namespace SpotifyApi.Domain.Services
                 .Include(t => t.Tracks)
                 .AsQueryable();
 
+            //filter by userName
+            if (!string.IsNullOrEmpty(resourceParams.UserName))
+            {
+                collectionBeforePaging = collectionBeforePaging
+                    .Where(a => a.UserName == resourceParams.UserName);
+            }
+
             //filter by type if type exists
             if (!string.IsNullOrEmpty(resourceParams.Type))
             {

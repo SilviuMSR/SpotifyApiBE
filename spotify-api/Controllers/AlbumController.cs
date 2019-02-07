@@ -89,7 +89,7 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpPost(Name = "CreateAlbum")]
-        public async Task<IActionResult> Post([FromBody] AlbumDto albumDto)
+        public async Task<IActionResult> Post([FromBody] AlbumToCreateDto albumDto)
         {
             if(!ModelState.IsValid)
             {
@@ -129,7 +129,7 @@ namespace SpotifyApi.Controllers
 
 
         [HttpPut("{id}", Name = "UpdateAlbum")]
-        public async Task<IActionResult> Update(int id, [FromBody] AlbumDto albumDto)
+        public async Task<IActionResult> Update(int id, [FromBody] AlbumToCreateDto albumDto)
         {
             if (!ModelState.IsValid)
             {

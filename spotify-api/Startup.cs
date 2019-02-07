@@ -121,18 +121,6 @@ namespace SpotifyApi
                 });
             });
 
-
-            //add headers for cache
-            services.AddHttpCacheHeaders(
-                (expirationModelOptions) 
-                =>
-                { expirationModelOptions.MaxAge = 600; },
-                (validationModelOptions) 
-                =>
-                { validationModelOptions.MustRevalidate = true; });
-
-            services.AddResponseCaching();
-
             services.AddMvc(options =>
             {
 
@@ -175,10 +163,6 @@ namespace SpotifyApi
         //    app.UseMiddleware<RequestsObservatorMiddleware>();
 
             app.UseAuthentication();
-
-            app.UseResponseCaching();
-
-            app.UseHttpCacheHeaders();
             
             app.UseMvc();
         }

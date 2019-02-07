@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SpotifyApi.Migrations
 {
-    public partial class aa : Migration
+    public partial class asad : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,9 +14,9 @@ namespace SpotifyApi.Migrations
                 {
                     AlbumId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
-                    ImgUri = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Type = table.Column<string>(maxLength: 50, nullable: true),
+                    ImgUri = table.Column<string>(maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,12 +58,64 @@ namespace SpotifyApi.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Password = table.Column<string>(nullable: true),
-                    Href = table.Column<string>(nullable: true)
+                    Password = table.Column<string>(nullable: false),
+                    Href = table.Column<string>(maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlaylistAlbums",
+                columns: table => new
+                {
+                    PlaylistAlbumId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Type = table.Column<string>(maxLength: 50, nullable: true),
+                    ImgUri = table.Column<string>(maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlaylistAlbums", x => x.PlaylistAlbumId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlaylistArtists",
+                columns: table => new
+                {
+                    PlaylistArtistId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Uri = table.Column<string>(maxLength: 100, nullable: true),
+                    ImgUri = table.Column<string>(maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlaylistArtists", x => x.PlaylistArtistId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAgents",
+                columns: table => new
+                {
+                    UserAgentId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserAgentDescription = table.Column<string>(nullable: true),
+                    SimpleSoftware = table.Column<string>(nullable: true),
+                    SimpleSubDescription = table.Column<string>(nullable: true),
+                    Software = table.Column<string>(nullable: true),
+                    SoftwareName = table.Column<string>(nullable: true),
+                    OperatingSystem = table.Column<string>(nullable: true),
+                    OperatingSystemName = table.Column<string>(nullable: true),
+                    OperatingSystemVersion = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAgents", x => x.UserAgentId);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,9 +124,9 @@ namespace SpotifyApi.Migrations
                 {
                     TrackId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Href = table.Column<string>(nullable: true),
-                    PreviewUrl = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Href = table.Column<string>(maxLength: 100, nullable: true),
+                    PreviewUrl = table.Column<string>(maxLength: 100, nullable: true),
                     AlbumId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -202,15 +254,68 @@ namespace SpotifyApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PlaylistTracks",
+                columns: table => new
+                {
+                    PlaylistTrackId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Href = table.Column<string>(maxLength: 100, nullable: true),
+                    PreviewUrl = table.Column<string>(maxLength: 100, nullable: true),
+                    PlaylistAlbumId = table.Column<int>(nullable: true),
+                    PlaylistArtistId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlaylistTracks", x => x.PlaylistTrackId);
+                    table.ForeignKey(
+                        name: "FK_PlaylistTracks_PlaylistAlbums_PlaylistAlbumId",
+                        column: x => x.PlaylistAlbumId,
+                        principalTable: "PlaylistAlbums",
+                        principalColumn: "PlaylistAlbumId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PlaylistTracks_PlaylistArtists_PlaylistArtistId",
+                        column: x => x.PlaylistArtistId,
+                        principalTable: "PlaylistArtists",
+                        principalColumn: "PlaylistArtistId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Requests",
+                columns: table => new
+                {
+                    RequestId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Destination = table.Column<string>(nullable: true),
+                    Method = table.Column<string>(nullable: true),
+                    Source = table.Column<string>(nullable: true),
+                    DateTime = table.Column<DateTime>(nullable: false),
+                    UserAgentId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Requests", x => x.RequestId);
+                    table.ForeignKey(
+                        name: "FK_Requests_UserAgents_UserAgentId",
+                        column: x => x.UserAgentId,
+                        principalTable: "UserAgents",
+                        principalColumn: "UserAgentId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Artists",
                 columns: table => new
                 {
                     ArtistId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Uri = table.Column<string>(nullable: true),
-                    ImgUri = table.Column<string>(nullable: true),
-                    TrackId = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Uri = table.Column<string>(maxLength: 100, nullable: true),
+                    ImgUri = table.Column<string>(maxLength: 100, nullable: true),
+                    TrackId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -220,7 +325,7 @@ namespace SpotifyApi.Migrations
                         column: x => x.TrackId,
                         principalTable: "Tracks",
                         principalColumn: "TrackId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -268,6 +373,21 @@ namespace SpotifyApi.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlaylistTracks_PlaylistAlbumId",
+                table: "PlaylistTracks",
+                column: "PlaylistAlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlaylistTracks_PlaylistArtistId",
+                table: "PlaylistTracks",
+                column: "PlaylistArtistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requests_UserAgentId",
+                table: "Requests",
+                column: "UserAgentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tracks_AlbumId",
                 table: "Tracks",
                 column: "AlbumId");
@@ -294,6 +414,12 @@ namespace SpotifyApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "PlaylistTracks");
+
+            migrationBuilder.DropTable(
+                name: "Requests");
+
+            migrationBuilder.DropTable(
                 name: "Tracks");
 
             migrationBuilder.DropTable(
@@ -301,6 +427,15 @@ namespace SpotifyApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "PlaylistAlbums");
+
+            migrationBuilder.DropTable(
+                name: "PlaylistArtists");
+
+            migrationBuilder.DropTable(
+                name: "UserAgents");
 
             migrationBuilder.DropTable(
                 name: "Albums");

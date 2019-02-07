@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyApi.Domain.Dtos;
 using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.EntityModels;
 using SpotifyApi.Domain.Logic.Links;
+using SpotifyApi.Domain.Models;
 using SpotifyApi.Domain.Services;
 using System;
 using System.Collections.Generic;
@@ -23,14 +25,17 @@ namespace SpotifyApi.Controllers
         private readonly IPlaylistTrackRepo _playlistTrackRepo;
         private readonly IMapper _mapper;
         private readonly ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> _linkService;
+        private readonly UserManager<User> _userManager;
 
         public PlaylistTrackController(IPlaylistTrackRepo playlistTrackRepo,
             IMapper mapper,
+            UserManager<User> userManager,
             ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters> linkService)
         {
             _playlistTrackRepo = playlistTrackRepo;
             _mapper = mapper;
             _linkService = linkService;
+            _userManager = userManager;
         }
 
         [HttpGet(Name = "GetPlaylistTracks")]
@@ -75,6 +80,13 @@ namespace SpotifyApi.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest();
+            }
+
+            var user = await _userManager.FindByNameAsync(trackDto.UserName);
+
+            if (user == null)
+            {
+                return NotFound();
             }
 
             var track = _mapper.Map<PlaylistTrack>(trackDto);

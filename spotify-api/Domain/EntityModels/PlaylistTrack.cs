@@ -11,6 +11,9 @@ namespace SpotifyApi.Domain.EntityModels
         public int PlaylistTrackId { get; set; }
 
         [Required]
+        public string UserName { get; set; }
+
+        [Required]
         [StringLength(100)]
         public string Name { get; set; }
 

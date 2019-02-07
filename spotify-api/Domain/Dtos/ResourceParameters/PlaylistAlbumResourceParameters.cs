@@ -9,5 +9,6 @@ namespace SpotifyApi.Domain.Dtos.ResourceParameters
     {
         public string Type { get; set; }
         public string Name { get; set; }
+        public string UserName { get; set; }
     }
 }

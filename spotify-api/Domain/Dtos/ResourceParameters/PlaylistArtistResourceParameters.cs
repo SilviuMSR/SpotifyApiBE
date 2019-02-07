@@ -8,5 +8,6 @@ namespace SpotifyApi.Domain.Dtos.ResourceParameters
     public class PlaylistArtistResourceParameters : BaseResourceParameters
     {
         public string Name { get; set; }
+        public string UserName { get; set; }
     }
 }
