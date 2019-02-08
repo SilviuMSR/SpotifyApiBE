@@ -11,3 +11,4 @@ C:\Users\Student\Desktop\SpotifyApiBE\spotify-api\bin\Debug\netcoreapp2.1\Spotif
 C:\Users\Student\Desktop\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.RazorTargetAssemblyInfo.cache
 C:\Users\Student\Desktop\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.dll
 C:\Users\Student\Desktop\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.pdb
+C:\Users\Student\Desktop\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.csprojAssemblyReference.cache

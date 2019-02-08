@@ -89,7 +89,7 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpPost(Name = "CreateTrack")]
-        public async Task<IActionResult> Post([FromBody] TrackDto trackDto)
+        public async Task<IActionResult> Post([FromBody] TrackToCreateDto trackDto)
         {
             if (!ModelState.IsValid)
             {
@@ -108,7 +108,7 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateTrack")]
-        public async Task<IActionResult> Update(int id, [FromBody] TrackDto trackDto)
+        public async Task<IActionResult> Update(int id, [FromBody] TrackToCreateDto trackDto)
         {
 
             if (!ModelState.IsValid)
@@ -150,7 +150,7 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpPatch("{id}/artist", Name = "AddArtistToTrack")]
-        public async Task<IActionResult> AddArtistToTrack(int id, [FromBody] ArtistDto artistDto)
+        public async Task<IActionResult> AddArtistToTrack(int id, [FromBody] ArtistToCreateDto artistDto)
         {
             if (!ModelState.IsValid)
             {

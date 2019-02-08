@@ -1,16 +1,10 @@
-﻿using SpotifyApi.Domain.EntityModels;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Dtos
 {
-    public class PlaylistArtistDto : LinkedResourceBaseDto
+    public class PlaylistArtistToCreateDto
     {
-        public int PlaylistArtistId { get; set; }
-
         [Required]
         public string UserName { get; set; }
 
@@ -24,6 +18,6 @@ namespace SpotifyApi.Domain.Dtos
         [StringLength(100)]
         public string ImgUri { get; set; }
 
-        public IEnumerable<PlaylistTrackDto> Tracks { get; set; }
+        public IEnumerable<PlaylistTrackToCreateDto> Tracks { get; set; }
     }
 }

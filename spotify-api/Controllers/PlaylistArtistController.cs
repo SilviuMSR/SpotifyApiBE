@@ -76,7 +76,7 @@ namespace SpotifyApi.Controllers
         }
 
         [HttpPost(Name = "CreatePlaylistArtist")]
-        public async Task<IActionResult> Post([FromBody] PlaylistArtistDto artistDto)
+        public async Task<IActionResult> Post([FromBody] PlaylistArtistToCreateDto artistDto)
         {
             if (!ModelState.IsValid)
             {

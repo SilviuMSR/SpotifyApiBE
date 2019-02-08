@@ -1,15 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace SpotifyApi.Domain.Dtos
 {
-    public class PlaylistTrackDto : LinkedResourceBaseDto
+    public class TrackToCreateDto
     {
-        public int PlaylistTrackId { get; set; }
-
-        [Required]
-        public string UserName { get; set; }
-
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
@@ -19,5 +15,8 @@ namespace SpotifyApi.Domain.Dtos
 
         [StringLength(100)]
         public string PreviewUrl { get; set; }
+
+        public IEnumerable<ArtistToCreateDto> Artists { get; set; }
+
     }
 }
