@@ -20,6 +20,10 @@ using SpotifyApi.Domain.Logic.AuxServicies.IAuxServicies;
 using SpotifyApi.Domain.Logic.AuxServicies;
 using SpotifyApi.Domain.Dtos.ResourceParameters;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Reflection;
+using System.IO;
+using System;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace SpotifyApi
 {
@@ -97,6 +101,7 @@ namespace SpotifyApi
                         ValidateIssuer = false,
                         ValidateAudience = false,
                     });
+
             //end of identity configuration
 
             //configuring Automapper
@@ -111,13 +116,41 @@ namespace SpotifyApi
             //now add the mapper as a service, unique, global per application scope
             services.AddSingleton(mapper);
 
+            services.AddSwaggerExamples();
+
             //add service for documentation using swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
                 {
                     Title = "SB Spotify Api :)",
-                    Version = "v1"
+                    Version = "v1",
+                    Contact = new Contact
+                    {
+                        Name = "John Doe",
+                        Email = "john@gmail.com",
+                        Url = "https://twitter.com/john_doe"
+                    },
+                });
+
+                c.ExampleFilters();
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
+
+                // add Security information to each operation for OAuth2
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                // if you're using the SecurityRequirementsOperationFilter, you also need to tell Swashbuckle you're using OAuth2
+                c.AddSecurityDefinition("auth", new ApiKeyScheme
+                {
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    In = "header",
+                    Name = "Authorization",
+                    Type = "apiKey"
                 });
             });
 
@@ -149,6 +182,8 @@ namespace SpotifyApi
                 builder.AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod());
+
+            app.UseStaticFiles();
 
             //import it to serve generated swagger as JSON
             app.UseSwagger();

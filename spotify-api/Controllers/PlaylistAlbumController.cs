@@ -40,6 +40,19 @@ namespace SpotifyApi.Controllers
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Gets a paged list of all Albums
+        /// </summary>
+        /// <remarks>
+        /// Sample header:
+        /// Authentication: Bearer {token}
+        /// Sample request:
+        ///
+        ///     GET /api/playlistalbum
+        ///
+        /// </remarks>
+        /// <returns>A  paged list of Abums</returns>
+        /// <response code="200"></response>  
         [HttpGet(Name = "GetPlaylistAlbums")]
         public async Task<IActionResult> Get([FromQuery] PlaylistAlbumResourceParameters resourceParameters)
         {
@@ -77,6 +90,25 @@ namespace SpotifyApi.Controllers
             });
         }
 
+        /// <summary>
+        /// Creates a specific Album 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/playlistalbum
+        ///     {
+        ///        "userName": "celMaiTareUSer",
+        ///        "name": "Best Album",
+        ///        "previewUrl": "http://listen.com/liste_me",
+        ///        "href": "http://album.com/track",
+        ///        "tracks": []
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>The Album </returns>
+        /// <response code="200">Returns the created album</response>
+        /// <response code="400">Invalid model</response> 
         [HttpPost(Name = "CreatePlaylistAlbum")]
         public async Task<IActionResult> Post([FromBody] PlaylistAlbumToCreateDto albumDto)
         {
@@ -103,6 +135,24 @@ namespace SpotifyApi.Controllers
             return Ok(_linkService.CreateLinks(mappedAlbum));
         }
 
+
+        /// <summary>
+        /// Deletes a specific album
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE /api/playlistalbum/{id}
+        ///     {
+        ///        "id": 1,
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The album with the given id</returns>
+        /// <response code="200">Returns the album</response>
+        /// <response code="400">If the request has no id</response>   
+        /// <response code="404">Album with given id not found</response> 
         [HttpDelete("{id}", Name = "DeletePlaylistAlbum")]
         public async Task<IActionResult> Delete(int id)
         {

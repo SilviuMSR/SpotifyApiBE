@@ -34,6 +34,19 @@ namespace SpotifyApi.Controllers
             _linkService = linkService;
         }
 
+        /// <summary>
+        /// Gets a paged list of all Tracks
+        /// </summary>
+        /// <remarks>
+        /// Sample header:
+        /// Authentication: Bearer {token}
+        /// Sample request:
+        ///
+        ///     GET /api/track
+        ///
+        /// </remarks>
+        /// <returns>A  paged list of Tracks</returns>
+        /// <response code="200"></response>  
         [HttpGet(Name = "GetTracks")]
         public async Task<IActionResult> Get([FromQuery] TrackResourceParameters resourceParameters)
         {
@@ -73,6 +86,23 @@ namespace SpotifyApi.Controllers
             });
         }
 
+        /// <summary>
+        /// Gets a specific Track by {id}
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/trac/{id}
+        ///     {
+        ///        "id": 1,
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The track with the given id</returns>
+        /// <response code="200">Returns the track</response>
+        /// <response code="400">If the request has no id</response>   
+        /// <response code="404">Track with given id not found</response> 
         [HttpGet("{id}", Name = "GetTrackById")]
         public async Task<IActionResult> Get(int id)
         {
@@ -88,6 +118,24 @@ namespace SpotifyApi.Controllers
             return Ok(_linkService.CreateLinks(mappedTrack));
         }
 
+        /// <summary>
+        /// Creates a specific Track 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/album
+        ///     {
+        ///        "name": "Best Album",
+        ///        "previewUrl": "http://listen.com/liste_me",
+        ///        "href": "http://album.com/track",
+        ///        "artists": []
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>The Track </returns>
+        /// <response code="200">Returns the created track</response>
+        /// <response code="400">Invalid model</response> 
         [HttpPost(Name = "CreateTrack")]
         public async Task<IActionResult> Post([FromBody] TrackToCreateDto trackDto)
         {
@@ -107,7 +155,27 @@ namespace SpotifyApi.Controllers
             return Ok(_linkService.CreateLinks(mappedTrack));
         }
 
-        [HttpPut("{id}", Name = "UpdateTrack")]
+         /// <summary>
+         /// Updates a specific Track by {id}
+         /// </summary>
+         /// <remarks>
+         /// Sample request:
+         ///
+         ///     PUT /api/album/{id}
+         ///     {
+         ///        "name": "Best Album",
+         ///        "previewUrl": "http://listen.com/liste_me",
+         ///        "href": "http://album.com/track",
+         ///        "artists": []
+         ///     }
+         ///
+         /// </remarks>
+         /// <param name="id">Required</param>
+         /// <returns>The Track with the given id</returns>
+         /// <response code="200">Returns the Track</response>
+         /// <response code="400">If the request has no id or invalid album model</response>   
+         /// <response code="404">Track with given id not found</response>  
+         [HttpPut("{id}", Name = "UpdateTrack")]
         public async Task<IActionResult> Update(int id, [FromBody] TrackToCreateDto trackDto)
         {
 
@@ -129,6 +197,23 @@ namespace SpotifyApi.Controllers
             return Ok(_linkService.CreateLinks(updatedTrack));
         }
 
+        /// <summary>
+        /// Deletes a specific track
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE /api/track/{id}
+        ///     {
+        ///        "id": 1,
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The track with the given id</returns>
+        /// <response code="200">Returns the track</response>
+        /// <response code="400">If the request has no id</response>   
+        /// <response code="404">trac with given id not found</response>  
         [HttpDelete("{id}", Name = "DeleteTrack")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -149,6 +234,24 @@ namespace SpotifyApi.Controllers
             return Ok(_linkService.CreateLinks(mappedTrack));
         }
 
+        /// <summary>
+        /// Adds a track to a specifictrack
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PATCH /{id}/track
+        ///     {  
+        ///        "name": "Best Artist"
+        ///         
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The track with the given id</returns>
+        /// <response code="200">Returns the track with new track</response>
+        /// <response code="400">If the request has no id or invalid track model</response>   
+        /// <response code="404">track with given id not found</response>  
         [HttpPatch("{id}/artist", Name = "AddArtistToTrack")]
         public async Task<IActionResult> AddArtistToTrack(int id, [FromBody] ArtistToCreateDto artistDto)
         {

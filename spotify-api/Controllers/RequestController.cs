@@ -33,7 +33,7 @@ namespace SpotifyApi.Controllers
             _linkService = linkService;
             
         }
-
+        
         // GET: api/Request
         [HttpGet(Name = "GetRequests")]
         public async Task<IActionResult> Get([FromQuery] RequestResourceParameters resourceParameters)

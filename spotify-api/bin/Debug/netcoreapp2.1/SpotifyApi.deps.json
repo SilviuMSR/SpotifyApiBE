@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "40665536fd0693bbff0e55fe8b80e61b01ce46c9"
+    "signature": "f68ac5c18f0455b3a74f0773170f578a57f6af26"
   },
   "compilationOptions": {
     "defines": [
@@ -17,7 +17,7 @@
     "optimize": false,
     "keyFile": "",
     "emitEntryPoint": true,
-    "xmlDoc": false,
+    "xmlDoc": true,
     "debugType": "portable"
   },
   "targets": {
@@ -31,6 +31,7 @@
           "Microsoft.NETCore.App": "2.1.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.1",
           "Swashbuckle.AspNetCore": "4.0.1",
+          "Swashbuckle.AspNetCore.Filters": "4.5.4",
           "System.Linq.Dynamic.Core": "1.0.9.2"
         },
         "runtime": {
@@ -416,6 +417,21 @@
           "lib/netstandard1.6/NuGet.Frameworks.dll": {}
         }
       },
+      "Scrutor/3.0.1": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.1",
+          "Microsoft.Extensions.DependencyModel": "2.1.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Scrutor.dll": {
+            "assemblyVersion": "3.0.1.0",
+            "fileVersion": "3.0.1.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Scrutor.dll": {}
+        }
+      },
       "Swashbuckle.AspNetCore/4.0.1": {
         "dependencies": {
           "Swashbuckle.AspNetCore.Swagger": "4.0.1",
@@ -430,6 +446,37 @@
         },
         "compile": {
           "lib/netstandard2.0/Swashbuckle.AspNetCore.dll": {}
+        }
+      },
+      "Swashbuckle.AspNetCore.Annotations/4.0.1": {
+        "dependencies": {
+          "Swashbuckle.AspNetCore.SwaggerGen": "4.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Swashbuckle.AspNetCore.Annotations.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Swashbuckle.AspNetCore.Annotations.dll": {}
+        }
+      },
+      "Swashbuckle.AspNetCore.Filters/4.5.4": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "2.1.1",
+          "Scrutor": "3.0.1",
+          "Swashbuckle.AspNetCore.Annotations": "4.0.1",
+          "Swashbuckle.AspNetCore.SwaggerGen": "4.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Swashbuckle.AspNetCore.Filters.dll": {
+            "assemblyVersion": "4.5.4.0",
+            "fileVersion": "4.5.4.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Swashbuckle.AspNetCore.Filters.dll": {}
         }
       },
       "Swashbuckle.AspNetCore.Swagger/4.0.1": {
@@ -3727,12 +3774,33 @@
       "path": "nuget.frameworks/4.7.0",
       "hashPath": "nuget.frameworks.4.7.0.nupkg.sha512"
     },
+    "Scrutor/3.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sJoPfpBW8CcWJvn3kyC2hF8nXTAWZ4OzzuLu7qmVEA6vieb9fq5j6bf+X/cRpF1c1xCUU2XYnOYIHtmxzKvTmw==",
+      "path": "scrutor/3.0.1",
+      "hashPath": "scrutor.3.0.1.nupkg.sha512"
+    },
     "Swashbuckle.AspNetCore/4.0.1": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-k8TzWTpjwO+4xXsMaaAsAPAdYKyM5wuRvSP+ZmgtyXwhW45ChBVq3xdVJ8Tz+hQ0ziBZSh5p6r2dkRN6SyasVA==",
       "path": "swashbuckle.aspnetcore/4.0.1",
       "hashPath": "swashbuckle.aspnetcore.4.0.1.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.Annotations/4.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-aSIJagG+Np1ho4+16bJuStiKyh2xYJBGRy+CVOMzVdAUhcu30wkt1m/YNKEwLOECeKPwThtoPkBoHvPniwqP6A==",
+      "path": "swashbuckle.aspnetcore.annotations/4.0.1",
+      "hashPath": "swashbuckle.aspnetcore.annotations.4.0.1.nupkg.sha512"
+    },
+    "Swashbuckle.AspNetCore.Filters/4.5.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-r9wSYIqjJ+5MULDp00/OcnFluuVQLGua2YUQpm9ftW++4IpnP2A8HwbQW7W/81okc3Ic/bcw1zOJaVWhlFlAxw==",
+      "path": "swashbuckle.aspnetcore.filters/4.5.4",
+      "hashPath": "swashbuckle.aspnetcore.filters.4.5.4.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore.Swagger/4.0.1": {
       "type": "package",

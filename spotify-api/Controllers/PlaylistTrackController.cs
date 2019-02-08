@@ -38,6 +38,19 @@ namespace SpotifyApi.Controllers
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Gets a paged list of all Tracks
+        /// </summary>
+        /// <remarks>
+        /// Sample header:
+        /// Authentication: Bearer {token}
+        /// Sample request:
+        ///
+        ///     GET /api/playlisttrack
+        ///
+        /// </remarks>
+        /// <returns>A  paged list of Tracks</returns>
+        /// <response code="200"></response>  
         [HttpGet(Name = "GetPlaylistTracks")]
         public async Task<IActionResult> Get([FromQuery] PlaylistTrackResourceParameters resourceParameters)
         {
@@ -74,6 +87,24 @@ namespace SpotifyApi.Controllers
             });
         }
 
+        /// <summary>
+        /// Creates a specific Track 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/playlisttrack
+        ///     {
+        ///        "userName": "celMaiTareUSer",
+        ///        "name": "Best Album",
+        ///        "previewUrl": "http://listen.com/liste_me",
+        ///        "href": "http://album.com/track",
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>The Track </returns>
+        /// <response code="200">Returns the created track</response>
+        /// <response code="400">Invalid model</response> 
         [HttpPost(Name = "CreatePlaylistTrack")]
         public async Task<IActionResult> Post([FromBody] PlaylistTrackToCreateDto trackDto)
         {
@@ -100,6 +131,23 @@ namespace SpotifyApi.Controllers
             return Ok(_linkService.CreateLinks(mappedTrack));
         }
 
+        /// <summary>
+        /// Deletes a specific track
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE /api/playlisttrack/{id}
+        ///     {
+        ///        "id": 1,
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The track with the given id</returns>
+        /// <response code="200">Returns the track</response>
+        /// <response code="400">If the request has no id</response>   
+        /// <response code="404">Track with given id not found</response>
         [HttpDelete("{id}", Name = "DeletePlaylistTrack")]
         public async Task<IActionResult> Delete(int id)
         {
