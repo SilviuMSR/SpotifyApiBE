@@ -34,9 +34,9 @@ namespace SpotifyApi.Domain.Services
             return await _context.Artists.ToListAsync();
         }
 
-        public PagedList<Artist> GetAllPaginationAsync(ArtistResourceParameters resourceParams)
+        public PagedList<Artist> GetAllPagination(ArtistResourceParameters resourceParams)
         {
-            var collectionBeforPaging = _context.Artists.AsQueryable();
+            var collectionBeforPaging = _context.Artists.OrderBy(a => a.Name).AsQueryable();
 
             //if name filter exists
             if (!string.IsNullOrEmpty(resourceParams.Name))

@@ -34,9 +34,10 @@ namespace SpotifyApi.Domain.Services
             return await _context.PlaylistTracks.ToListAsync();
         }
 
-        public PagedList<PlaylistTrack> GetAllPaginationAsync(PlaylistTrackResourceParameters resourceParams)
+        public PagedList<PlaylistTrack> GetAllPagination(PlaylistTrackResourceParameters resourceParams)
         {
             var collectionBeforPaging = _context.PlaylistTracks
+                .OrderBy(t => t.Name)
                 .AsQueryable();
 
 

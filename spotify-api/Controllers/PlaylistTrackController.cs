@@ -54,7 +54,7 @@ namespace SpotifyApi.Controllers
         [HttpGet(Name = "GetPlaylistTracks")]
         public async Task<IActionResult> Get([FromQuery] PlaylistTrackResourceParameters resourceParameters)
         {
-            var tracks = _playlistTrackRepo.GetAllPaginationAsync(resourceParameters);
+            var tracks = _playlistTrackRepo.GetAllPagination(resourceParameters);
             var mappedTracks = _mapper.Map<IEnumerable<PlaylistTrackDto>>(tracks);
 
             //construct links to previus+next page

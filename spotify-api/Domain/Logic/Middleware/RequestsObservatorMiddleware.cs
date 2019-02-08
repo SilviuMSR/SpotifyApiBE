@@ -41,6 +41,9 @@ namespace SpotifyApi.Domain.Logic.Middleware
                 UserAgent = result,
             });
 
+            //save changes to db
+            await requestRepo.SaveChangesAsync();
+
             //calling next to go to next middleware
             await _next(context);
 

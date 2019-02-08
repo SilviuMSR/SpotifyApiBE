@@ -52,7 +52,7 @@ namespace SpotifyApi.Controllers
         [HttpGet(Name = "GetArtists")]
         public async Task<IActionResult> Get([FromQuery] ArtistResourceParameters resourceParameters)
         {
-            var artists = _artistRepo.GetAllPaginationAsync(resourceParameters);
+            var artists = _artistRepo.GetAllPagination(resourceParameters);
             var mappedArtists = _mapper.Map<IEnumerable<ArtistDto>>(artists);
 
             //constructing links to previus next page

@@ -18,6 +18,7 @@ using SpotifyApi.Domain;
 using Microsoft.AspNetCore.Authorization;
 using SpotifyApi.Domain.Dtos.ResourceParameters;
 using SpotifyApi.Domain.Logic.Links;
+using SpotifyApi.Domain.Services.IRepos;
 
 namespace SpotifyApi.Controllers
 {
@@ -29,17 +30,23 @@ namespace SpotifyApi.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
+        private readonly IUserRepo _userRepo;
+        private readonly ILinkService<UserDto, UserResourceParameters> _linkService;
 
 
         public UserController(IConfiguration config,
             UserManager<User> userManager, 
             SignInManager<User> signInManager,
-            IMapper mapper)
+            IMapper mapper,
+            IUserRepo userRepo,
+            ILinkService<UserDto, UserResourceParameters> linkService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
             _mapper = mapper;
+            _userRepo = userRepo;
+            _linkService = linkService;
         }
 
         /// <summary>
@@ -79,9 +86,10 @@ namespace SpotifyApi.Controllers
             {
 
                 //uncoment the section to add admins manually
-                /*//add user role to user
+                //add user role to user
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Admin")); 
+
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "User"));
-                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Admin")); */
 
                 var mappedUserToDto = _mapper.Map<UserToReturnDto>(user);
                 var userForLinks = _mapper.Map<UserDto>(user);
@@ -128,8 +136,7 @@ namespace SpotifyApi.Controllers
 
             return BadRequest(result.Errors);
         }
-
-
+        
         /// <summary>
         /// Creates a new user with user and admin permissions
         /// </summary>
@@ -175,5 +182,37 @@ namespace SpotifyApi.Controllers
 
             return BadRequest(result.Errors);
         }
+
+        [HttpGet(Name = "GetUsers")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Get([FromQuery] UserResourceParameters resourceParameters)
+        {
+            var users = _userRepo.GetAllPagination(resourceParameters);
+            var mappedUsers = _mapper.Map<IEnumerable<UserToReturnDto>>(users);
+
+            //Construct links to previous+ next page
+            var previousPage = users.HasPrevious ?
+                _linkService.CreateResourceUri(resourceParameters, ResourceType.PreviousPage) : null;
+
+            var nextPage = users.HasNext ?
+                _linkService.CreateResourceUri(resourceParameters, ResourceType.NextPage) : null;
+
+            var paginationMetadata = new
+            {
+                totalCount = users.TotalCount,
+                pageSize = users.PageSize,
+                currentPage = users.CurrentPage,
+                totalPages = users.TotalPages,
+                previousPageLink = previousPage,
+                nextPageLink = nextPage
+            };
+
+            return Ok(new
+            {
+                Values = mappedUsers,
+                Links = paginationMetadata
+            });
+        }
+
     }
 }

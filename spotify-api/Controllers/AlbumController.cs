@@ -51,8 +51,7 @@ namespace SpotifyApi.Controllers
         [HttpGet(Name = "GetAlbums")]
         public async Task<IActionResult> Get([FromQuery] AlbumResourceParameters resourceParameters)
         {
-            var a = _albumRepo;
-            var albums = _albumRepo.GetAllPaginationAsync(resourceParameters);
+            var albums = _albumRepo.GetAllPagination(resourceParameters);
             var mappedAlbums = _mapper.Map<IEnumerable<AlbumDto>>(albums);
 
             //Construct links to previous+ next page

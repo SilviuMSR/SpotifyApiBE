@@ -56,7 +56,7 @@ namespace SpotifyApi.Controllers
         [HttpGet(Name = "GetPlaylistAlbums")]
         public async Task<IActionResult> Get([FromQuery] PlaylistAlbumResourceParameters resourceParameters)
         {
-            var albums = _playlistAlbumRepo.GetAllPaginationAsync(resourceParameters);
+            var albums = _playlistAlbumRepo.GetAllPagination(resourceParameters);
 
             var mappedAlbums= _mapper.Map<IEnumerable<PlaylistAlbumDto>>(albums);
 

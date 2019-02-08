@@ -36,10 +36,11 @@ namespace SpotifyApi.Domain.Services
                 .ToListAsync();
         }
 
-        public PagedList<PlaylistAlbum> GetAllPaginationAsync(PlaylistAlbumResourceParameters resourceParams)
+        public PagedList<PlaylistAlbum> GetAllPagination(PlaylistAlbumResourceParameters resourceParams)
         {
             var collectionBeforePaging = _context.PlaylistAlbums
                 .Include(t => t.Tracks)
+                .OrderBy(t => t.UserName)
                 .AsQueryable();
 
             //filter by userName

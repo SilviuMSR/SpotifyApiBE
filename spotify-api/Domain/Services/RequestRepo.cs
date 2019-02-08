@@ -34,10 +34,11 @@ namespace SpotifyApi.Domain.Services
                 .ToListAsync();
         }
 
-        public PagedList<Request> GetAllPaginationAsync(RequestResourceParameters resourceParams)
+        public PagedList<Request> GetAllPagination(RequestResourceParameters resourceParams)
         {
             var collectionBeforPaging = _context.Requests
                 .Include(r => r.UserAgent)
+                .OrderBy(r => r.DateTime)
                 .AsQueryable();
 
             //filter by Method if type exists

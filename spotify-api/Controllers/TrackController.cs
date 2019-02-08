@@ -51,7 +51,7 @@ namespace SpotifyApi.Controllers
         public async Task<IActionResult> Get([FromQuery] TrackResourceParameters resourceParameters)
         {
             //Also must modify paginationAsync name since it is not async
-            var tracks = _trackRepo.GetAllPaginationAsync(resourceParameters);
+            var tracks = _trackRepo.GetAllPagination(resourceParameters);
 
             var mappedTracks = _mapper.Map<IEnumerable<TrackDto>>(tracks);
 

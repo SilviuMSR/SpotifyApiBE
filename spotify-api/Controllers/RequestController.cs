@@ -54,7 +54,7 @@ namespace SpotifyApi.Controllers
         {
 
             //task: add dto and links to previous next apges
-            var requests = _requestRepo.GetAllPaginationAsync(resourceParameters);
+            var requests = _requestRepo.GetAllPagination(resourceParameters);
 
             //map requests to requestsDto
             var mappedRequests = _mapper.Map<IEnumerable<RequestDto>>(requests);

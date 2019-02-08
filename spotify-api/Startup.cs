@@ -24,6 +24,7 @@ using System.Reflection;
 using System.IO;
 using System;
 using Swashbuckle.AspNetCore.Filters;
+using SpotifyApi.Domain.Services.IRepos;
 
 namespace SpotifyApi
 {
@@ -49,6 +50,7 @@ namespace SpotifyApi
             services.AddScoped<IPlaylistArtist, PlaylistArtistRepo>();
             services.AddScoped<IPlaylistTrackRepo, PlaylistTrackRepo>();
             services.AddScoped<IRequestRepo, RequestRepo>();
+            services.AddScoped<IUserRepo, UserRepo>();
 
             //configuring services for links in controllers
             services.AddScoped<ILinkService<TrackDto, TrackResourceParameters>, TrackLinkService>();
@@ -58,6 +60,7 @@ namespace SpotifyApi
             services.AddScoped<ILinkService<PlaylistArtistDto, PlaylistArtistResourceParameters>, PlaylistArtistLinkService>();
             services.AddScoped<ILinkService<PlaylistTrackDto, PlaylistTrackResourceParameters>, PlaylistTrackLinkService>();
             services.AddScoped<ILinkService<RequestDto, RequestResourceParameters>, RequestLinkService>();
+            services.AddScoped<ILinkService<UserDto, UserResourceParameters>, UserLinkService>();
 
             //service for middleware user agent
             services.AddScoped<IAuxUserAgentService, SwaggerUiService>();
@@ -195,7 +198,7 @@ namespace SpotifyApi
                 c.RoutePrefix = string.Empty;
             });
 
-        //    app.UseMiddleware<RequestsObservatorMiddleware>();
+            app.UseMiddleware<RequestsObservatorMiddleware>();
 
             app.UseAuthentication();
             
