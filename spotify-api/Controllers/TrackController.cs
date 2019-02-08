@@ -92,7 +92,7 @@ namespace SpotifyApi.Controllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     GET /api/trac/{id}
+        ///     GET /api/track/{id}
         ///     {
         ///        "id": 1,
         ///     }

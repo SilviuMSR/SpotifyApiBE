@@ -42,6 +42,22 @@ namespace SpotifyApi.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Creates a token for a user 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/user/login
+        ///     {
+        ///        "userName": "Xulescu",
+        ///        "password": "NotParola12"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>The token and some user info </returns>
+        /// <response code="200">Returns the created toen + user</response>
+        /// <response code="400">Invalid model</response>   
         [HttpPost("login", Name = "LoginUser")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userDto)
         {
@@ -80,6 +96,24 @@ namespace SpotifyApi.Controllers
             return Unauthorized();
         }
 
+
+        /// <summary>
+        /// Creates a new user with user permissions
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/user
+        ///     {
+        ///        "userName": "Xulescu",
+        ///        "email": "x_ulescu@gmail.com",
+        ///        "password": "NotParola12"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>No Content</returns>
+        /// <response code="201">No Content</response>
+        /// <response code="400">Invalid model</response>
         [HttpPost(Name = "CreateUser")]
         public async Task<IActionResult> Register([FromBody] UserForRegisterDto userDto)
         {
@@ -95,6 +129,25 @@ namespace SpotifyApi.Controllers
             return BadRequest(result.Errors);
         }
 
+
+        /// <summary>
+        /// Creates a new user with user and admin permissions
+        /// </summary>
+        /// <remarks>
+        /// Remark: You have to have admin permission to create an admin user
+        /// Sample request:
+        ///     
+        ///     POST /api/user
+        ///     {
+        ///        "userName": "Xulescu",
+        ///        "email": "x_ulescu@gmail.com",
+        ///        "password": "NotParola12"
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>No Content</returns>
+        /// <response code="201">No Content</response>
+        /// <response code="400">Invalid model</response>
         [HttpPost("admin", Name = "CreateAdmin")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] UserForRegisterDto userDto)

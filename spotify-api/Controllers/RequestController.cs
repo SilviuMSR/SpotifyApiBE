@@ -33,8 +33,22 @@ namespace SpotifyApi.Controllers
             _linkService = linkService;
             
         }
-        
+
         // GET: api/Request
+        /// <summary>
+        /// Gets a paged list of all Requests made to server
+        /// </summary>
+        /// <remarks>
+        /// Sample header:
+        /// Authentication: Bearer {token}
+        /// Roles : Admin
+        /// Sample request:
+        ///
+        ///     GET /api/request
+        ///
+        /// </remarks>
+        /// <returns>A  paged list of Requests</returns>
+        /// <response code="200"></response>  
         [HttpGet(Name = "GetRequests")]
         public async Task<IActionResult> Get([FromQuery] RequestResourceParameters resourceParameters)
         {
@@ -77,6 +91,23 @@ namespace SpotifyApi.Controllers
             });
         }
 
+        /// <summary>
+        /// Gets a specific Request by {id}
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/request/{id}
+        ///     {
+        ///        "id": 1,
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The Request with the given id</returns>
+        /// <response code="200">Returns the Request</response>
+        /// <response code="400">If the request has no id</response>   
+        /// <response code="404">Request with given id not found</response> 
         [HttpGet("{id}",Name = "GetRequestById")]
         public async Task<IActionResult> Get(int id)
         {
