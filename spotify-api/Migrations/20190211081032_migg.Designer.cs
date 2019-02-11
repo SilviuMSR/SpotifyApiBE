@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpotifyApi.Domain.Services;
 
 namespace SpotifyApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190211081032_migg")]
+    partial class migg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,7 +157,7 @@ namespace SpotifyApi.Migrations
                     b.Property<int?>("PlaylistArtistId");
 
                     b.Property<string>("PreviewUrl")
-                        .HasMaxLength(500);
+                        .HasMaxLength(100);
 
                     b.Property<string>("UserName")
                         .IsRequired();
