@@ -9,6 +9,6 @@ namespace SpotifyApi.Domain.Services
 {
     public interface IPlaylistArtist : IRepo<PlaylistArtist, PlaylistArtistResourceParameters>
     {
-
+        bool GetByName(string name, string username);
     }
 }

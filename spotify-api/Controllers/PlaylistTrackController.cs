@@ -122,6 +122,11 @@ namespace SpotifyApi.Controllers
 
             var track = _mapper.Map<PlaylistTrack>(trackDto);
 
+            if (_playlistTrackRepo.GetByName(track.Name, user.UserName) == true)
+            {
+                return StatusCode(409);
+            }
+
             _playlistTrackRepo.Add(track);
 
             await _playlistTrackRepo.SaveChangesAsync();

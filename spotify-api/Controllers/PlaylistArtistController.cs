@@ -125,6 +125,11 @@ namespace SpotifyApi.Controllers
 
             var artist = _mapper.Map<PlaylistArtist>(artistDto);
 
+            if (_playlistArtistRepo.GetByName(artist.Name, user.UserName) == true)
+            {
+                return StatusCode(409);
+            }
+
             _playlistArtistRepo.Add(artist);
 
             await _playlistArtistRepo.SaveChangesAsync();
