@@ -170,14 +170,6 @@ namespace SpotifyApi
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
 
-            //configure serivices for supporting caching headers
-            services.AddHttpCacheHeaders((expiationModelOptions)
-            =>
-            { expiationModelOptions.MaxAge = 600; },
-            (validationModelOptions)
-            =>
-            { validationModelOptions.MustRevalidate = true; }
-            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -197,18 +189,12 @@ namespace SpotifyApi
                 .AllowAnyHeader()
                 .AllowAnyMethod());
 
-            //configure extensions for static Content
-            var provider = new FileExtensionContentTypeProvider();
-            //add new mappings
-            provider.Mappings[".mp3"] = "audio/mpeg";
-
             //configure static files to point to custom StaticContent
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
                     Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
                 RequestPath = "/StaticContent",
-                ContentTypeProvider = provider
             });
 
             //import it to serve generated swagger as JSON
@@ -224,8 +210,6 @@ namespace SpotifyApi
             app.UseMiddleware<RequestsObservatorMiddleware>();
 
             app.UseAuthentication();
-
-            app.UseHttpCacheHeaders();
 
             app.UseMvc();
         }
