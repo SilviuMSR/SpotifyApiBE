@@ -9,6 +9,6 @@ namespace SpotifyApi.Domain.Services
 {
     public interface IPlaylistTrackRepo : IRepo<PlaylistTrack, PlaylistTrackResourceParameters>
     {
-
+        bool GetByName(string name, string username);
     }
 }

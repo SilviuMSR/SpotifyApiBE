@@ -126,6 +126,11 @@ namespace SpotifyApi.Controllers
             
             var album = _mapper.Map<PlaylistAlbum>(albumDto);
 
+            if(_playlistAlbumRepo.GetByName(album.Name, user.UserName) == true)
+            {
+                return StatusCode(409);
+            }
+
             _playlistAlbumRepo.Add(album);
 
             await _playlistAlbumRepo.SaveChangesAsync();
@@ -150,7 +155,7 @@ namespace SpotifyApi.Controllers
         /// </remarks>
         /// <param name="id">Required</param>
         /// <returns>The album with the given id</returns>
-        /// <response code="200">Returns the album</response>
+        /// <response code="204">NoContent</response>
         /// <response code="400">If the request has no id</response>   
         /// <response code="404">Album with given id not found</response> 
         [HttpDelete("{id}", Name = "DeletePlaylistAlbum")]
@@ -170,8 +175,8 @@ namespace SpotifyApi.Controllers
             //save changes async
             await _playlistAlbumRepo.SaveChangesAsync();
 
-            
-            return StatusCode(204);
+
+            return NoContent();
         }
 
 

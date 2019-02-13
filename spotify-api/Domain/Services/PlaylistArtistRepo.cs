@@ -77,6 +77,17 @@ namespace SpotifyApi.Domain.Services
             return artist;
         }
 
+        public bool GetByName(string name, string username)
+        {
+
+            if (_context.PlaylistArtists.FirstOrDefault(a => a.Name == name && a.UserName == username) != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<bool> SaveChangesAsync()
         {
             //returntrue if 1 or more entities were changed

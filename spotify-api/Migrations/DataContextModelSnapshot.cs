@@ -155,7 +155,7 @@ namespace SpotifyApi.Migrations
                     b.Property<int?>("PlaylistArtistId");
 
                     b.Property<string>("PreviewUrl")
-                        .HasMaxLength(100);
+                        .HasMaxLength(500);
 
                     b.Property<string>("UserName")
                         .IsRequired();
@@ -321,7 +321,7 @@ namespace SpotifyApi.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("PreviewUrl")
-                        .HasMaxLength(100);
+                        .HasMaxLength(500);
 
                     b.HasKey("TrackId");
 

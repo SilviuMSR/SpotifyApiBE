@@ -73,7 +73,7 @@
              </remarks>
              <param name="id">Required</param>
              <returns>The album with the given id</returns>
-             <response code="200">Returns the album</response>
+             <response code="204">NoContent</response>
              <response code="400">If the request has no id</response>   
              <response code="404">Album with given id not found</response>  
         </member>
@@ -188,7 +188,7 @@
              </remarks>
              <param name="id">Required</param>
              <returns>The artist with the given id</returns>
-             <response code="200">Returns the artist</response>
+             <response code="204">NoContent</response>
              <response code="400">If the request has no id</response>   
              <response code="404">Album with given id not found</response> 
         </member>
@@ -264,7 +264,7 @@
              </remarks>
              <param name="id">Required</param>
              <returns>The album with the given id</returns>
-             <response code="200">Returns the album</response>
+             <response code="204">NoContent</response>
              <response code="400">If the request has no id</response>   
              <response code="404">Album with given id not found</response> 
         </member>
@@ -319,7 +319,7 @@
              </remarks>
              <param name="id">Required</param>
              <returns>The artist with the given id</returns>
-             <response code="200">Returns the artist</response>
+             <response code="204">NoContent</response>
              <response code="400">If the request has no id</response>   
              <response code="404">Artist with given id not found</response>
         </member>
@@ -373,7 +373,7 @@
              </remarks>
              <param name="id">Required</param>
              <returns>The track with the given id</returns>
-             <response code="200">Returns the track</response>
+             <response code="204">No Content</response>
              <response code="400">If the request has no id</response>   
              <response code="404">Track with given id not found</response>
         </member>
@@ -503,7 +503,7 @@
              </remarks>
              <param name="id">Required</param>
              <returns>The track with the given id</returns>
-             <response code="200">Returns the track</response>
+             <response code="204">NoContent</response>
              <response code="400">If the request has no id</response>   
              <response code="404">trac with given id not found</response>  
         </member>

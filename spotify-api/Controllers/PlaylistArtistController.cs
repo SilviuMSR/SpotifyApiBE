@@ -125,6 +125,11 @@ namespace SpotifyApi.Controllers
 
             var artist = _mapper.Map<PlaylistArtist>(artistDto);
 
+            if (_playlistArtistRepo.GetByName(artist.Name, user.UserName) == true)
+            {
+                return StatusCode(409);
+            }
+
             _playlistArtistRepo.Add(artist);
 
             await _playlistArtistRepo.SaveChangesAsync();
@@ -148,7 +153,7 @@ namespace SpotifyApi.Controllers
         /// </remarks>
         /// <param name="id">Required</param>
         /// <returns>The artist with the given id</returns>
-        /// <response code="200">Returns the artist</response>
+        /// <response code="204">NoContent</response>
         /// <response code="400">If the request has no id</response>   
         /// <response code="404">Artist with given id not found</response>
         [HttpDelete("{id}", Name = "DeletePlaylistArtist")]
@@ -169,7 +174,7 @@ namespace SpotifyApi.Controllers
             await _playlistArtistRepo.SaveChangesAsync();
 
 
-            return StatusCode(204);
+            return NoContent();
         }
     }
 }

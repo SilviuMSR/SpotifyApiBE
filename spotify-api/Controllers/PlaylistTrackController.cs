@@ -122,6 +122,11 @@ namespace SpotifyApi.Controllers
 
             var track = _mapper.Map<PlaylistTrack>(trackDto);
 
+            if (_playlistTrackRepo.GetByName(track.Name, user.UserName) == true)
+            {
+                return StatusCode(409);
+            }
+
             _playlistTrackRepo.Add(track);
 
             await _playlistTrackRepo.SaveChangesAsync();
@@ -145,7 +150,7 @@ namespace SpotifyApi.Controllers
         /// </remarks>
         /// <param name="id">Required</param>
         /// <returns>The track with the given id</returns>
-        /// <response code="200">Returns the track</response>
+        /// <response code="204">No Content</response>
         /// <response code="400">If the request has no id</response>   
         /// <response code="404">Track with given id not found</response>
         [HttpDelete("{id}", Name = "DeletePlaylistTrack")]
@@ -166,7 +171,7 @@ namespace SpotifyApi.Controllers
             await _playlistTrackRepo.SaveChangesAsync();
 
 
-            return StatusCode(204);
+            return NoContent();
         }
     }
 }

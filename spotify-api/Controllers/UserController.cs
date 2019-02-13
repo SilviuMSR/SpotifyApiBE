@@ -87,7 +87,7 @@ namespace SpotifyApi.Controllers
 
                 //uncoment the section to add admins manually
                 //add user role to user
-                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Admin")); 
+                //await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Admin")); 
 
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "User"));
 
