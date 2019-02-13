@@ -65,7 +65,7 @@ namespace SpotifyApi
             services.AddScoped<ILinkService<UserDto, UserResourceParameters>, UserLinkService>();
 
             //service for middleware user agent
-            services.AddScoped<IAuxUserAgentService, SwaggerUiService>();
+            services.AddScoped<IAuxUserAgentService, UserAgentService>();
 
             //for constructing links
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();

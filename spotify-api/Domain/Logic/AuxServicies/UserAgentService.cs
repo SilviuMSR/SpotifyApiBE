@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.Logic.AuxServicies
 {
-    public class SwaggerUiService : IAuxUserAgentService
+    public class UserAgentService : IAuxUserAgentService
     {
         private IConfiguration _config;
         private const string SWAGGER_BASE_URL = "https://api.whatismybrowser.com/api/v2/";  
 
-        public SwaggerUiService(IConfiguration config)
+        public UserAgentService(IConfiguration config)
         {
             _config = config;
         }
