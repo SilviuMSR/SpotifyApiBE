@@ -198,7 +198,7 @@ namespace SpotifyApi
                 c.RoutePrefix = string.Empty;
             });
 
-            app.UseMiddleware<RequestsObservatorMiddleware>();
+            //app.UseMiddleware<RequestsObservatorMiddleware>();
 
             app.UseAuthentication();
             

@@ -89,7 +89,7 @@ namespace SpotifyApi.Controllers
                 //add user role to user
                 //await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Admin")); 
 
-                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "User"));
+                //await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "User"));
 
                 var mappedUserToDto = _mapper.Map<UserToReturnDto>(user);
                 var userForLinks = _mapper.Map<UserDto>(user);

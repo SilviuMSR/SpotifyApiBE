@@ -37,8 +37,6 @@ namespace SpotifyApi.Domain.Services
             //Add track to album
             album.Tracks.Add(track);
 
-            Update(id, album);
-
             return album;
 
         }
