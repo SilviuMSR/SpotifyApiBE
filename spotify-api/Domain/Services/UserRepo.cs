@@ -20,7 +20,9 @@ namespace SpotifyApi.Domain.Services.IRepos
 
         public PagedList<User> GetAllPagination(UserResourceParameters resourceParams)
         {
-            var collectionBeforPaging = _userManager.Users.AsQueryable();
+            var collectionBeforPaging = _userManager.Users
+                .OrderBy(u => u.UserName)
+                .AsQueryable();
 
             //searh if exists
             if (!string.IsNullOrEmpty(resourceParams.SearchQuery))

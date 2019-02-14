@@ -8,5 +8,7 @@ namespace SpotifyApi.Domain.Logic.Links
     {
         T CreateLinks(T t);
         string CreateResourceUri(Resource resourceParameters, ResourceType type);
+
+        T CreateLinksWhenDeleted(T t);
     }
 }

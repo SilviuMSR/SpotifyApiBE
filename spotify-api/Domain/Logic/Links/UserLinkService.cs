@@ -35,6 +35,32 @@ namespace SpotifyApi.Domain.Logic.Links
                "crete_new_admin_user",
                "POST"));
 
+            t.Links.Add(new Link(_urlHelper.Link("GetUsers",
+               new { }),
+               "gets_all_users",
+               "GET"));
+
+            return t;
+        }
+
+        public UserDto CreateLinksWhenDeleted(UserDto t)
+        {
+            t.Links.Add(new Link(_urlHelper.Link("CreateUser",
+             new { }),
+             "create_new_user",
+             "POST"));
+
+            t.Links.Add(new Link(_urlHelper.Link("CreateAdmin",
+             new { }),
+             "crete_new_admin_user",
+             "POST"));
+
+            t.Links.Add(new Link(_urlHelper.Link("GetUsers",
+              new { }),
+              "gets_all_users",
+              "GET"));
+
+
             return t;
         }
 

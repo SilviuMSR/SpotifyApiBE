@@ -49,6 +49,11 @@ namespace SpotifyApi.Domain.Logic.Links
              "add_artist_to_track",
              "PATCH"));
 
+            track.Links.Add(new Link(_urlHelper.Link("CreateTrack",
+             new { id = track.TrackId }),
+             "create_track",
+             "POST"));
+
             track.Artists = track.Artists.Select(artist =>
             {
                 artist = _artistLinkService.CreateLinks(artist);
@@ -57,6 +62,28 @@ namespace SpotifyApi.Domain.Logic.Links
             });
 
             return track;
+        }
+
+        public TrackDto CreateLinksWhenDeleted(TrackDto t)
+        {
+            t.Links.Add(new Link(_urlHelper.Link("GetTracks",
+               new { }),
+               "get_all",
+               "GET"));
+
+            t.Links.Add(new Link(_urlHelper.Link("CreateTrack",
+            new { id = t.TrackId }),
+            "create_track",
+            "POST"));
+
+            t.Artists = t.Artists.Select(artist =>
+            {
+                artist = _artistLinkService.CreateLinksWhenDeleted(artist);
+
+                return artist;
+            });
+            
+            return t;
         }
 
         public string CreateResourceUri(TrackResourceParameters resourceParameters,

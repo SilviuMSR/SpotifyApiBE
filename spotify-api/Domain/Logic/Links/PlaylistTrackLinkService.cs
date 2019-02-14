@@ -38,6 +38,22 @@ namespace SpotifyApi.Domain.Logic.Links
             return t;
         }
 
+        public PlaylistTrackDto CreateLinksWhenDeleted(PlaylistTrackDto t)
+        {
+
+            t.Links.Add(new Link(_urlHelper.Link("GetPlaylistTracks",
+            new { }),
+            "get_all",
+            "GET"));
+
+            t.Links.Add(new Link(_urlHelper.Link("CreatePlaylistTrack",
+              new { }),
+              "post_playlistTrack",
+              "POST"));
+
+            return t;
+        }
+
         public string CreateResourceUri(PlaylistTrackResourceParameters resourceParameters, ResourceType type)
         {
             switch (type)

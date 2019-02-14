@@ -29,3 +29,4 @@ C:\Users\Student\Desktop\Backend\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.
 C:\Users\Student\Desktop\Backend\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.xml
 C:\Users\Student\Desktop\Backend\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.pdb
 C:\Users\Student\Desktop\Backend\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.csprojAssemblyReference.cache
+C:\Users\Student\Desktop\SpotifyApiBE\spotify-api\obj\Debug\netcoreapp2.1\SpotifyApi.csprojAssemblyReference.cache

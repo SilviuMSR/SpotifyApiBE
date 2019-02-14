@@ -22,11 +22,16 @@ namespace SpotifyApi.Domain.Logic.Links
 
         public AlbumDto CreateLinks(AlbumDto t)
         {
-            t.Links.Add(new Link(_urlHelper.Link("GetAlbums",
+           t.Links.Add(new Link(_urlHelper.Link("GetAlbums",
                new { }),
                "get_all",
                "GET"));
 
+            t.Links.Add(new Link(_urlHelper.Link("CreateAlbum",
+               new { }),
+               "create",
+               "POST"));
+            
             t.Links.Add(new Link(_urlHelper.Link("GetAlbumById",
               new { id = t.AlbumId }),
               "self",
@@ -50,6 +55,28 @@ namespace SpotifyApi.Domain.Logic.Links
             t.Tracks = t.Tracks.Select(track => 
             {
                 track = _trackLinkService.CreateLinks(track);
+
+                return track;
+            });
+
+            return t;
+        }
+
+        public AlbumDto CreateLinksWhenDeleted(AlbumDto t)
+        {
+            t.Links.Add(new Link(_urlHelper.Link("GetAlbums",
+               new { }),
+               "get_all",
+               "GET"));
+
+            t.Links.Add(new Link(_urlHelper.Link("CreateAlbum",
+               new { }),
+               "create",
+               "POST"));
+
+            t.Tracks = t.Tracks.Select(track =>
+            {
+                track = _trackLinkService.CreateLinksWhenDeleted(track);
 
                 return track;
             });

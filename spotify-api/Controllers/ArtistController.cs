@@ -172,7 +172,7 @@ namespace SpotifyApi.Controllers
         /// </remarks>
         /// <param name="id">Required</param>
         /// <returns>The artist with the given id</returns>
-        /// <response code="204">NoContent</response>
+        /// <response code="200">DeletedArtist</response>
         /// <response code="400">If the request has no id</response>   
         /// <response code="404">Album with given id not found</response> 
         [HttpDelete("{id}", Name = "DeleteArtist")]
@@ -189,8 +189,9 @@ namespace SpotifyApi.Controllers
 
             await _artistRepo.SaveChangesAsync();
 
-            return NoContent();
+            var mappedArtist = _mapper.Map<ArtistDto>(artist);
 
+            return Ok(_linkService.CreateLinksWhenDeleted(mappedArtist));
         }
 
 

@@ -24,6 +24,11 @@ namespace SpotifyApi.Domain.Logic.Links
                  "get_all",
                  "GET"));
 
+            t.Links.Add(new Link(_urlHelper.Link("CreateArtists",
+                 new { }),
+                 "create",
+                 "POST"));
+
             t.Links.Add(new Link(_urlHelper.Link("DeleteArtist",
              new { id = t.ArtistId }),
              "delete_artist",
@@ -40,6 +45,21 @@ namespace SpotifyApi.Domain.Logic.Links
              new { id = t.ArtistId }),
              "update_self",
              "PUT"));
+
+            return t;
+        }
+
+        public ArtistDto CreateLinksWhenDeleted(ArtistDto t)
+        {
+            t.Links.Add(new Link(_urlHelper.Link("GetArtists",
+                 new { }),
+                 "get_all",
+                 "GET"));
+
+            t.Links.Add(new Link(_urlHelper.Link("CreateArtists",
+                 new { }),
+                 "create",
+                 "POST"));
 
             return t;
         }

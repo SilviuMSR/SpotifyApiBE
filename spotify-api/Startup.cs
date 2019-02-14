@@ -26,7 +26,6 @@ using System;
 using Swashbuckle.AspNetCore.Filters;
 using SpotifyApi.Domain.Services.IRepos;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.StaticFiles;
 
 namespace SpotifyApi
 {
@@ -168,6 +167,7 @@ namespace SpotifyApi
                 {
                     opt.SerializerSettings.ReferenceLoopHandling =
                         Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    
                 });
 
         }
