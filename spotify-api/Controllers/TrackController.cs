@@ -211,7 +211,7 @@ namespace SpotifyApi.Controllers
         /// </remarks>
         /// <param name="id">Required</param>
         /// <returns>The track with the given id</returns>
-        /// <response code="204">NoContent</response>
+        /// <response code="200">Track</response>
         /// <response code="400">If the request has no id</response>   
         /// <response code="404">trac with given id not found</response>  
         [HttpDelete("{id}", Name = "DeleteTrack")]
@@ -229,9 +229,8 @@ namespace SpotifyApi.Controllers
             await _trackRepo.SaveChangesAsync();
 
             var mappedTrack = _mapper.Map<TrackDto>(track);
-
-
-            return NoContent();
+            
+            return Ok(_linkService.CreateLinksWhenDeleted(mappedTrack));
         }
 
         /// <summary>
