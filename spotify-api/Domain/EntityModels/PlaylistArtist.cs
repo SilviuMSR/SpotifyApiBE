@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SpotifyApi.Domain.EntityModels
 {
     public class PlaylistArtist
     {
         public int PlaylistArtistId { get; set; }
+
+        [Required]
+        public string UserName { get; set; }
 
         [Required]
         [StringLength(100)]

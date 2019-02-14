@@ -33,6 +33,16 @@ namespace SpotifyApi.Domain.Logic.Links
             return t;
         }
 
+        public RequestDto CreateLinksWhenDeleted(RequestDto t)
+        {
+            t.Links.Add(new Link(_urlHelper.Link("GetRequests",
+              new { }),
+              "get_all_requests",
+              "GET"));
+
+            return t;
+        }
+
         public string CreateResourceUri(RequestResourceParameters resourceParameters, ResourceType type)
         {
             switch (type)
@@ -41,7 +51,6 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetRequests",
                         new
                         {
-                            orderBy = resourceParameters.OrderBy,
                             searchQuery = resourceParameters.SearchQuery,
                             method = resourceParameters.Method,
                             destination = resourceParameters.Destination,
@@ -53,7 +62,6 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetRequests",
                         new
                         {
-                            orderBy = resourceParameters.OrderBy,
                             searchQuery = resourceParameters.SearchQuery,
                             method = resourceParameters.Method,
                             destination = resourceParameters.Destination,
@@ -65,7 +73,6 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetRequests",
                         new
                         {
-                            orderBy = resourceParameters.OrderBy,
                             searchQuery = resourceParameters.SearchQuery,
                             method = resourceParameters.Method,
                             destination = resourceParameters.Destination,

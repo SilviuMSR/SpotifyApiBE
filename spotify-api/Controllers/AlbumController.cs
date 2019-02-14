@@ -34,12 +34,24 @@ namespace SpotifyApi.Controllers
             _albumLinkService = albumLinkService;
         }
 
-
+        
+        /// <summary>
+        /// Gets a paged list of all Albums
+        /// </summary>
+        /// <remarks>
+        /// Sample header:
+        /// Authentication: Bearer {token}
+        /// Sample request:
+        ///
+        ///     GET /api/album
+        ///
+        /// </remarks>
+        /// <returns>A  paged list of Albums</returns>
+        /// <response code="200"></response>  
         [HttpGet(Name = "GetAlbums")]
         public async Task<IActionResult> Get([FromQuery] AlbumResourceParameters resourceParameters)
         {
-            var a = _albumRepo;
-            var albums = _albumRepo.GetAllPaginationAsync(resourceParameters);
+            var albums = _albumRepo.GetAllPagination(resourceParameters);
             var mappedAlbums = _mapper.Map<IEnumerable<AlbumDto>>(albums);
 
             //Construct links to previous+ next page
@@ -73,6 +85,23 @@ namespace SpotifyApi.Controllers
             });
         }
 
+        /// <summary>
+        /// Gets a specific Album by {id}
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /api/album/{id}
+        ///     {
+        ///        "id": 1,
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The album with the given id</returns>
+        /// <response code="200">Returns the album</response>
+        /// <response code="400">If the request has no id</response>   
+        /// <response code="404">Album with given id not found</response>  
         [HttpGet("{id}", Name = "GetAlbumById")]
         public async Task<IActionResult> Get(int id)
         {
@@ -88,8 +117,27 @@ namespace SpotifyApi.Controllers
             return Ok(_albumLinkService.CreateLinks(mappedAlbum));
         }
 
+
+        /// <summary>
+        /// Creates a specific Album 
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /api/album
+        ///     {
+        ///        "name": "Best Album",
+        ///        "type": "Rap",
+        ///        "imgUri": "http://album.com/album_photo",
+        ///        "tracks": []
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns>The album </returns>
+        /// <response code="200">Returns the created album</response>
+        /// <response code="400">Invalid model</response>   
         [HttpPost(Name = "CreateAlbum")]
-        public async Task<IActionResult> Post([FromBody] AlbumDto albumDto)
+        public async Task<IActionResult> Post([FromBody] AlbumToCreateDto albumDto)
         {
             if(!ModelState.IsValid)
             {
@@ -108,6 +156,24 @@ namespace SpotifyApi.Controllers
             return Ok(_albumLinkService.CreateLinks(mappedAlbum));
         }
 
+
+        /// <summary>
+        /// Deletes a specific album
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE /api/album/{id}
+        ///     {
+        ///        "id": 1,
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The album with the given id</returns>
+        /// <response code="200">Returns deleted album</response>
+        /// <response code="400">If the request has no id</response>   
+        /// <response code="404">Album with given id not found</response>  
         [HttpDelete("{id}", Name = "DeleteAlbum")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -124,12 +190,31 @@ namespace SpotifyApi.Controllers
 
             var mappedAlbum = _mapper.Map<AlbumDto>(album);
 
-            return Ok(_albumLinkService.CreateLinks(mappedAlbum));
+            return Ok(_albumLinkService.CreateLinksWhenDeleted(mappedAlbum));
         }
 
-
+        /// <summary>
+        /// Updates a specific Album by {id}
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PUT /api/album/{id}
+        ///     {  
+        ///        "name": "Best Album",
+        ///        "type": "Rap",
+        ///        "imgUri": "http://album.com/album_photo",
+        ///        "tracks": []
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The album with the given id</returns>
+        /// <response code="200">Returns the album</response>
+        /// <response code="400">If the request has no id or invalid album model</response>   
+        /// <response code="404">Album with given id not found</response>  
         [HttpPut("{id}", Name = "UpdateAlbum")]
-        public async Task<IActionResult> Update(int id, [FromBody] AlbumDto albumDto)
+        public async Task<IActionResult> Update(int id, [FromBody] AlbumToCreateDto albumDto)
         {
             if (!ModelState.IsValid)
             {
@@ -149,6 +234,25 @@ namespace SpotifyApi.Controllers
             return Ok(_albumLinkService.CreateLinks(mappedUpdatedAlbum));
         }
 
+        /// <summary>
+        /// Adds a track to a specific album
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     PATCH /{id}/track
+        ///     {  
+        ///        "name": "Best track",
+        ///        "href": "http://best_track.com/2",
+        ///        "previewUrl": "http://best_track.com/2",
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Required</param>
+        /// <returns>The album with the given id</returns>
+        /// <response code="200">Returns the album with new track</response>
+        /// <response code="400">If the request has no id or invalid track model</response>   
+        /// <response code="404">Album with given id not found</response>  
         [HttpPatch("{id}/track", Name = "AddTrackToAlbum")]
         public async Task<IActionResult> AddTrack(int id, [FromBody] TrackDto trackDto)
         {

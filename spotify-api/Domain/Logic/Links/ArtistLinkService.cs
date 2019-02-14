@@ -24,6 +24,11 @@ namespace SpotifyApi.Domain.Logic.Links
                  "get_all",
                  "GET"));
 
+            t.Links.Add(new Link(_urlHelper.Link("CreateArtists",
+                 new { }),
+                 "create",
+                 "POST"));
+
             t.Links.Add(new Link(_urlHelper.Link("DeleteArtist",
              new { id = t.ArtistId }),
              "delete_artist",
@@ -44,6 +49,21 @@ namespace SpotifyApi.Domain.Logic.Links
             return t;
         }
 
+        public ArtistDto CreateLinksWhenDeleted(ArtistDto t)
+        {
+            t.Links.Add(new Link(_urlHelper.Link("GetArtists",
+                 new { }),
+                 "get_all",
+                 "GET"));
+
+            t.Links.Add(new Link(_urlHelper.Link("CreateArtists",
+                 new { }),
+                 "create",
+                 "POST"));
+
+            return t;
+        }
+
         public string CreateResourceUri(ArtistResourceParameters resourceParameters, ResourceType type)
         {
 
@@ -53,7 +73,6 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetArtists",
                         new
                         {
-                            orderBy = resourceParameters.OrderBy,
                             searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber - 1,
@@ -63,7 +82,6 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetArtists",
                         new
                         {
-                            orderBy = resourceParameters.OrderBy,
                             searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber + 1,
@@ -73,7 +91,6 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetArtists",
                         new
                         {
-                            orderBy = resourceParameters.OrderBy,
                             searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber,

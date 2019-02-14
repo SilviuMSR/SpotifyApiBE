@@ -30,7 +30,7 @@ namespace SpotifyApi.Domain.Logic.Middleware
 
 
             //waiting for user agent
-            var result = await userAgentService.ParseUserAgentData(user_agent.ToString());
+           // var result = await userAgentService.ParseUserAgentData(user_agent.ToString());
  
             //saving request(request+useragentdata) data to dbcontext
             requestRepo.Add(new Request
@@ -38,8 +38,11 @@ namespace SpotifyApi.Domain.Logic.Middleware
                 Source = context.Connection.RemoteIpAddress.ToString() + ":" + context.Connection.RemotePort.ToString(),
                 Destination = context.Request.Path.ToString(),
                 Method = context.Request.Method,
-                UserAgent = result,
+                //UserAgent = result,
             });
+
+            //save changes to db
+            await requestRepo.SaveChangesAsync();
 
             //calling next to go to next middleware
             await _next(context);

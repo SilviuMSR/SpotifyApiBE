@@ -7,6 +7,9 @@ namespace SpotifyApi.Domain.Dtos.ResourceParameters
 {
     public class TrackResourceParameters : BaseResourceParameters
     {
+        /// <summary>
+        /// If set returnes Tracks with this Name
+        /// </summary>
         public string Name { get; set; }
     }
 }

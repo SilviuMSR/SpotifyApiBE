@@ -36,11 +36,22 @@ namespace SpotifyApi.Domain.Services
                 .ToListAsync();
         }
 
-        public PagedList<PlaylistArtist> GetAllPaginationAsync(PlaylistArtistResourceParameters resourceParams)
+        public PagedList<PlaylistArtist> GetAllPagination(PlaylistArtistResourceParameters resourceParams)
         {
             var collectionBeforePaging = _context.PlaylistArtists
                 .Include(t => t.Tracks)
+                .OrderBy(a => a.Name)
                 .AsQueryable();
+
+
+            //filter by userName
+            if (!string.IsNullOrEmpty(resourceParams.UserName))
+            {
+                collectionBeforePaging = collectionBeforePaging
+                    .Where(a => a.UserName == resourceParams.UserName);
+            }
+
+
 
             //if name filter exists
             if (!string.IsNullOrEmpty(resourceParams.Name))
@@ -64,6 +75,17 @@ namespace SpotifyApi.Domain.Services
             var artist = await _context.PlaylistArtists.Include(t => t.Tracks).FirstOrDefaultAsync(art => art.PlaylistArtistId == id);
 
             return artist;
+        }
+
+        public bool GetByName(string name, string username)
+        {
+
+            if (_context.PlaylistArtists.FirstOrDefault(a => a.Name == name && a.UserName == username) != null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<bool> SaveChangesAsync()

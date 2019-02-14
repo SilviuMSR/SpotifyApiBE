@@ -12,6 +12,9 @@ namespace SpotifyApi.Domain.Dtos
         public int PlaylistArtistId { get; set; }
 
         [Required]
+        public string UserName { get; set; }
+
+        [Required]
         [StringLength(100)]
         public string Name { get; set; }
 
@@ -21,6 +24,6 @@ namespace SpotifyApi.Domain.Dtos
         [StringLength(100)]
         public string ImgUri { get; set; }
 
-        public IEnumerable<PlaylistTrack> Tracks { get; set; }
+        public IEnumerable<PlaylistTrackDto> Tracks { get; set; }
     }
 }

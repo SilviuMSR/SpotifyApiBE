@@ -95,11 +95,18 @@ namespace SpotifyApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImgUri");
+                    b.Property<string>("ImgUri")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("UserName")
+                        .IsRequired();
 
                     b.HasKey("PlaylistAlbumId");
 
@@ -112,11 +119,18 @@ namespace SpotifyApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImgUri");
+                    b.Property<string>("ImgUri")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Uri");
+                    b.Property<string>("Uri")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("UserName")
+                        .IsRequired();
 
                     b.HasKey("PlaylistArtistId");
 
@@ -129,15 +143,22 @@ namespace SpotifyApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Href");
+                    b.Property<string>("Href")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<int?>("PlaylistAlbumId");
 
                     b.Property<int?>("PlaylistArtistId");
 
-                    b.Property<string>("PreviewUrl");
+                    b.Property<string>("PreviewUrl")
+                        .HasMaxLength(500);
+
+                    b.Property<string>("UserName")
+                        .IsRequired();
 
                     b.HasKey("PlaylistTrackId");
 
@@ -204,11 +225,15 @@ namespace SpotifyApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImgUri");
+                    b.Property<string>("ImgUri")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .HasMaxLength(50);
 
                     b.HasKey("AlbumId");
 
@@ -221,13 +246,17 @@ namespace SpotifyApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImgUri");
+                    b.Property<string>("ImgUri")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<int?>("TrackId");
 
-                    b.Property<string>("Uri");
+                    b.Property<string>("Uri")
+                        .HasMaxLength(100);
 
                     b.HasKey("ArtistId");
 
@@ -284,11 +313,15 @@ namespace SpotifyApi.Migrations
 
                     b.Property<int?>("AlbumId");
 
-                    b.Property<string>("Href");
+                    b.Property<string>("Href")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
-                    b.Property<string>("PreviewUrl");
+                    b.Property<string>("PreviewUrl")
+                        .HasMaxLength(500);
 
                     b.HasKey("TrackId");
 
@@ -313,7 +346,8 @@ namespace SpotifyApi.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<string>("Href");
+                    b.Property<string>("Href")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -325,7 +359,8 @@ namespace SpotifyApi.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
 
-                    b.Property<string>("Password");
+                    b.Property<string>("Password")
+                        .IsRequired();
 
                     b.Property<string>("PasswordHash");
 

@@ -47,10 +47,11 @@ namespace SpotifyApi.Domain.Services
         {
             return await _context.Tracks
                 .Include(p => p.Artists)
+                .OrderBy(t => t.Name)
                 .ToListAsync();
         }
 
-        public PagedList<Track> GetAllPaginationAsync(TrackResourceParameters resourceParams)
+        public PagedList<Track> GetAllPagination(TrackResourceParameters resourceParams)
         {
             var collectionBeforPaging = _context.Tracks
                 .Include(a => a.Artists)

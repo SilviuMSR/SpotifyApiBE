@@ -38,6 +38,21 @@ namespace SpotifyApi.Domain.Logic.Links
             return t;
         }
 
+        public PlaylistArtistDto CreateLinksWhenDeleted(PlaylistArtistDto t)
+        {
+            t.Links.Add(new Link(_urlHelper.Link("GetPlaylistArtists",
+              new { }),
+              "get_all",
+              "GET"));
+
+            t.Links.Add(new Link(_urlHelper.Link("CreatePlaylistArtist",
+              new { }),
+              "post_playlistArtist",
+              "POST"));
+
+            return t;
+        }
+
         public string CreateResourceUri(PlaylistArtistResourceParameters resourceParameters, ResourceType type)
         {
             switch (type)
@@ -46,7 +61,7 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistArtists",
                         new
                         {
-                            orderBy = resourceParameters.OrderBy,
+                            userName = resourceParameters.UserName,
                             searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber - 1,
@@ -56,7 +71,7 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistArtists",
                         new
                         {
-                            orderBy = resourceParameters.OrderBy,
+                            userName = resourceParameters.UserName,
                             searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber + 1,
@@ -66,7 +81,7 @@ namespace SpotifyApi.Domain.Logic.Links
                     return _urlHelper.Link("GetPlaylistArtists",
                         new
                         {
-                            orderBy = resourceParameters.OrderBy,
+                            userName = resourceParameters.UserName,
                             searchQuery = resourceParameters.SearchQuery,
                             name = resourceParameters.Name,
                             pageNumber = resourceParameters.PageNumber,

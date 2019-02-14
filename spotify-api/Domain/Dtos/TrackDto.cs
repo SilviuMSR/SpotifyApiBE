@@ -14,7 +14,7 @@ namespace SpotifyApi.Domain.Dtos
         [StringLength(100)]
         public string Href { get; set; }
 
-        [StringLength(100)]
+        [StringLength(500)]
         public string PreviewUrl { get; set; }
 
         public IEnumerable<ArtistDto> Artists { get; set; }
